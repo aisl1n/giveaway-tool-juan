@@ -6,7 +6,7 @@ import type { DrawResult, RaffleStore } from '../types/raffle'
 
 const initialState = {
   participantsText: '',
-  prizes: ['Premio #1', 'Premio #2', 'Premio #3'],
+  prizes: ['Prêmio #1', 'Prêmio #2', 'Prêmio #3'],
   results: [] as DrawResult[],
 }
 
@@ -19,7 +19,7 @@ export const useRaffleStore = create<RaffleStore>()(
       },
       addPrize: () => {
         const { prizes } = get()
-        set({ prizes: [...prizes, `Premio #${prizes.length + 1}`] })
+        set({ prizes: [...prizes, `Prêmio #${prizes.length + 1}`] })
       },
       updatePrize: (index, value) => {
         const { prizes } = get()
@@ -38,7 +38,7 @@ export const useRaffleStore = create<RaffleStore>()(
 
         // Reset draws when prize structure changes to avoid inconsistent mappings.
         set({
-          prizes: filteredPrizes.length > 0 ? nextPrizes : ['Premio #1'],
+          prizes: filteredPrizes.length > 0 ? nextPrizes : ['Prêmio #1'],
           results: [],
         })
       },
