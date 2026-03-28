@@ -83,7 +83,9 @@ export const useRaffleStore = create<RaffleStore>()(
           prizeLabel: validPrizes[nextPrizeIndex],
           winnerName: winner,
           drawOrder: results.length + 1,
-          drawnAt: Date.now(),
+          drawnAt: new Date().toLocaleString('pt-BR', {
+            timeZone: 'America/Sao_Paulo',
+          }),
         }
 
         set({ results: [...results, result] })

@@ -3,7 +3,7 @@ export interface DrawResult {
   prizeLabel: string
   winnerName: string
   drawOrder: number
-  drawnAt: number
+  drawnAt: string
 }
 
 export type DrawPhase = 'idle' | 'countdown' | 'rolling' | 'result'
