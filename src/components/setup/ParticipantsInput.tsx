@@ -18,9 +18,9 @@ export function ParticipantsInput() {
         value={participantsNames}
         onChange={(event) => setParticipantsNames(event.target.value)}
         placeholder={'Ana\nBruno\nCarlos\nDaniela'}
-        className="focus:border-brand-primary focus:ring-brand-primary/30 min-h-52 w-full resize-y rounded-2xl border border-white/20 bg-slate-950/70 px-4 py-3 text-sm text-slate-100 transition outline-none focus:ring-2"
+        className="focus:border-brand-secondary focus:ring-brand-secondary/30 border-brand-line bg-brand-surface/85 text-brand-tertiary min-h-52 w-full resize-y rounded-2xl border px-4 py-3 text-sm transition outline-none focus:ring-2"
       />
-      <p className="mt-3 text-xs text-slate-400">
+      <p className="text-brand-muted mt-3 text-xs">
         Dica: nomes repetidos sao removidos automaticamente.
       </p>
     </GlassCard>

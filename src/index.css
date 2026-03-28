@@ -1,17 +1,48 @@
-@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;700&display=swap');
 @import 'tailwindcss';
 
-@theme {
-  --font-sans: 'Space Grotesk', ui-sans-serif, sans-serif;
-  --font-heading: 'Sora', ui-sans-serif, sans-serif;
+@font-face {
+  font-family: 'Sablon Up Regular';
+  src: url('/fonts/Sablon_Up_Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
 
-  --color-brand-primary: #14b8a6;
-  --color-brand-secondary: #f59e0b;
-  --color-brand-surface: #0b1220;
+@font-face {
+  font-family: 'Sablon Up College';
+  src: url('/fonts/Sablon_Up_College.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Sablon Up Outline';
+  src: url('/fonts/Sablon_Up_Outline.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme {
+  --font-sans: 'Sablon Up Regular', ui-sans-serif, sans-serif;
+  --font-college: 'Sablon Up College', ui-sans-serif, sans-serif;
+  --font-heading: 'Sablon Up Regular', ui-sans-serif, sans-serif;
+  --font-outline: 'Sablon Up Outline', ui-sans-serif, sans-serif;
+
+  --color-brand-primary: #4533af;
+  --color-brand-secondary: #ff7300;
+  --color-brand-tertiary: #eaeaea;
+  --color-brand-ink: #000000;
+  --color-brand-surface: #100826;
+  --color-brand-panel: #1a1138;
+  --color-brand-line: #ffffff3a;
+  --color-brand-muted: #c8c5d6;
 }
 
 :root {
   color-scheme: dark;
+  font-size: 22px;
 }
 
 * {
@@ -22,13 +53,40 @@ body {
   margin: 0;
   min-height: 100vh;
   font-family: var(--font-sans);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
   background:
-    radial-gradient(circle at 15% 0%, rgba(20, 184, 166, 0.18), transparent 45%),
-    radial-gradient(circle at 88% 16%, rgba(245, 158, 11, 0.18), transparent 42%),
-    linear-gradient(170deg, #020617 0%, #111827 40%, #1f2937 100%);
-  color: #e2e8f0;
+    radial-gradient(circle at 12% 6%, rgba(255, 115, 0, 0.3), transparent 42%),
+    radial-gradient(circle at 86% 0%, rgba(69, 51, 175, 0.36), transparent 47%),
+    linear-gradient(165deg, #06010f 8%, #100826 48%, #1a1138 100%);
+  color: var(--color-brand-tertiary);
+  position: relative;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.08;
+  background-image: url('/images/Estampa-Camiseta-1.png');
+  background-size: 460px;
+  background-repeat: repeat;
+  mix-blend-mode: screen;
 }
 
 #root {
   min-height: 100vh;
+}
+
+@media (max-width: 768px) {
+  :root {
+    font-size: 17px;
+  }
+
+  body::before {
+    background-size: 320px;
+    opacity: 0.06;
+  }
 }

@@ -80,8 +80,8 @@ export function DrawStage() {
       subtitle="Contagem regressiva + efeito de rolagem em alta velocidade."
     >
       <div className="space-y-5">
-        <div className="rounded-3xl border border-white/20 bg-black/35 p-4 text-center">
-          <p className="mb-2 text-xs tracking-[0.18em] text-slate-400 uppercase">
+        <div className="border-brand-line bg-brand-surface/55 rounded-3xl border p-4 text-center">
+          <p className="text-brand-muted mb-2 text-xs tracking-[0.18em] uppercase">
             Proximo premio
           </p>
           <p className="text-brand-secondary text-lg font-semibold">
@@ -89,7 +89,7 @@ export function DrawStage() {
           </p>
         </div>
 
-        <div className="relative flex min-h-52 items-center justify-center overflow-hidden rounded-3xl border border-white/20 bg-slate-950/80 p-6 text-center">
+        <div className="border-brand-line bg-brand-surface/85 relative flex min-h-52 items-center justify-center overflow-hidden rounded-3xl border p-6 text-center">
           <AnimatePresence mode="wait">
             {phase === 'countdown' ? (
               <motion.p
@@ -111,10 +111,10 @@ export function DrawStage() {
                 transition={{ duration: 0.2 }}
                 className="space-y-2"
               >
-                <p className="text-xs tracking-[0.18em] text-slate-400 uppercase">
+                <p className="text-brand-muted text-xs tracking-[0.18em] uppercase">
                   {phase === 'rolling' ? 'Rodando nomes...' : 'Ganhador'}
                 </p>
-                <p className="font-heading text-4xl leading-tight font-semibold text-slate-50 md:text-5xl">
+                <p className="font-heading text-brand-tertiary text-4xl leading-tight font-semibold md:text-5xl">
                   {rollingName}
                 </p>
               </motion.div>
@@ -126,34 +126,36 @@ export function DrawStage() {
           <motion.div
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
-            className="border-brand-primary/40 bg-brand-primary/10 rounded-2xl border p-4 text-center"
+            className="border-brand-primary/45 bg-brand-primary/15 rounded-2xl border p-4 text-center"
           >
             <p className="text-brand-primary text-xs tracking-[0.15em] uppercase">
               Vencedor confirmado
             </p>
-            <p className="mt-2 text-xl font-semibold text-slate-50">
+            <p className="text-brand-tertiary mt-2 text-xl font-semibold">
               {lastDraw.winnerName}
             </p>
-            <p className="mt-1 text-sm text-slate-300">Levou: {lastDraw.prizeLabel}</p>
+            <p className="text-brand-muted mt-1 text-sm">Levou: {lastDraw.prizeLabel}</p>
           </motion.div>
         ) : null}
 
-        <div className="grid gap-3 text-sm text-slate-300 sm:grid-cols-3">
-          <div className="rounded-2xl border border-white/10 bg-black/25 p-3">
-            <p className="text-xs tracking-wider text-slate-400 uppercase">Elegiveis</p>
-            <p className="mt-1 text-lg font-semibold text-slate-100">
+        <div className="text-brand-muted grid gap-3 text-sm sm:grid-cols-3">
+          <div className="border-brand-line bg-brand-surface/65 rounded-2xl border p-3">
+            <p className="text-xs tracking-wider uppercase">Elegiveis</p>
+            <p className="text-brand-tertiary mt-1 text-lg font-semibold">
               {eligibleParticipants.length}
             </p>
           </div>
-          <div className="rounded-2xl border border-white/10 bg-black/25 p-3">
-            <p className="text-xs tracking-wider text-slate-400 uppercase">Premios</p>
-            <p className="mt-1 text-lg font-semibold text-slate-100">
+          <div className="border-brand-line bg-brand-surface/65 rounded-2xl border p-3">
+            <p className="text-xs tracking-wider uppercase">Premios</p>
+            <p className="text-brand-tertiary mt-1 text-lg font-semibold">
               {validPrizes.length}
             </p>
           </div>
-          <div className="rounded-2xl border border-white/10 bg-black/25 p-3">
-            <p className="text-xs tracking-wider text-slate-400 uppercase">Sorteados</p>
-            <p className="mt-1 text-lg font-semibold text-slate-100">{results.length}</p>
+          <div className="border-brand-line bg-brand-surface/65 rounded-2xl border p-3">
+            <p className="text-xs tracking-wider uppercase">Sorteados</p>
+            <p className="text-brand-tertiary mt-1 text-lg font-semibold">
+              {results.length}
+            </p>
           </div>
         </div>
 
@@ -164,7 +166,7 @@ export function DrawStage() {
               void runDrawExperience()
             }}
             disabled={!canDraw}
-            className="bg-brand-primary rounded-2xl px-5 py-3 text-sm font-semibold text-slate-900 transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40"
+            className="bg-brand-primary text-brand-tertiary rounded-2xl px-5 py-3 text-sm font-semibold transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40"
           >
             {phase === 'countdown' || phase === 'rolling'
               ? 'Sorteando...'
@@ -174,14 +176,14 @@ export function DrawStage() {
             type="button"
             onClick={resetDraws}
             disabled={phase === 'countdown' || phase === 'rolling'}
-            className="hover:border-brand-secondary hover:text-brand-secondary rounded-2xl border border-white/20 px-5 py-3 text-sm font-semibold text-slate-100 transition disabled:cursor-not-allowed disabled:opacity-40"
+            className="hover:border-brand-secondary hover:text-brand-secondary border-brand-line text-brand-tertiary rounded-2xl border px-5 py-3 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-40"
           >
             Reiniciar sorteio
           </button>
         </div>
 
         {drawCompleted ? (
-          <p className="rounded-2xl border border-emerald-400/40 bg-emerald-500/15 px-4 py-3 text-sm text-emerald-200">
+          <p className="border-brand-secondary/55 bg-brand-secondary/16 text-brand-tertiary rounded-2xl border px-4 py-3 text-sm">
             Todos os premios foram definidos. O ultimo sorteio concluiu o Premio #1
             principal.
           </p>

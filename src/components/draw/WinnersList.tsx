@@ -16,7 +16,7 @@ export function WinnersList() {
       subtitle="Historico de ganhadores por ordem de sorteio."
     >
       {results.length === 0 ? (
-        <p className="rounded-2xl border border-white/10 bg-black/25 px-4 py-5 text-sm text-slate-400">
+        <p className="text-brand-muted border-brand-line bg-brand-surface/65 rounded-2xl border px-4 py-5 text-sm">
           Nenhum sorteio realizado ainda.
         </p>
       ) : (
@@ -27,13 +27,13 @@ export function WinnersList() {
             return (
               <li
                 key={result.id}
-                className="rounded-2xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-slate-200"
+                className="text-brand-tertiary border-brand-line bg-brand-surface/70 rounded-2xl border px-4 py-3 text-sm"
               >
                 <p className="text-brand-secondary font-semibold">Premio #{ranking}</p>
-                <p className="mt-1 text-base font-medium text-slate-50">
+                <p className="text-brand-tertiary mt-1 text-base font-medium">
                   {result.winnerName}
                 </p>
-                <p className="text-xs text-slate-400">{result.prizeLabel}</p>
+                <p className="text-brand-muted text-xs">{result.prizeLabel}</p>
               </li>
             )
           })}

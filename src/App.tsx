@@ -9,23 +9,28 @@ function App() {
 
   return (
     <div className="relative min-h-screen overflow-hidden px-4 py-6 md:px-8 md:py-8">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(20,184,166,0.2),transparent_45%),radial-gradient(circle_at_80%_20%,rgba(245,158,11,0.16),transparent_38%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_16%_12%,rgba(255,115,0,0.24),transparent_44%),radial-gradient(circle_at_82%_14%,rgba(69,51,175,0.42),transparent_40%)]" />
 
       <div className="mx-auto w-full max-w-7xl space-y-6">
-        <header className="relative rounded-3xl border border-white/15 bg-white/10 px-6 py-5 shadow-[0_18px_44px_rgba(0,0,0,0.35)] backdrop-blur-xl">
+        <header className="border-brand-line bg-brand-panel/65 relative overflow-hidden rounded-3xl border px-6 py-5 shadow-[0_22px_52px_rgba(0,0,0,0.45)] backdrop-blur-xl">
+          <div className="bg-brand-primary/50 pointer-events-none absolute -top-16 -right-10 h-44 w-44 rounded-full blur-3xl" />
+          <div className="bg-brand-secondary/40 pointer-events-none absolute -bottom-16 -left-12 h-44 w-44 rounded-full blur-3xl" />
+
           <div className="flex flex-wrap items-center justify-between gap-4">
-            <div>
-              <p className="text-brand-secondary text-xs tracking-[0.2em] uppercase">
-                Premium Giveaway
+            <div className="relative z-10">
+              <p className="text-brand-secondary text-xs tracking-[0.26em] uppercase">
+                Fit Club Giveaway
               </p>
-              <h1 className="font-heading mt-2 text-2xl font-bold tracking-tight text-slate-50 md:text-3xl">
+              <h1 className="font-heading text-brand-tertiary mt-2 text-2xl font-bold tracking-wide md:text-4xl">
                 Sorteio Oficial do Personal Trainer
               </h1>
             </div>
 
-            <div className="flex h-16 w-36 items-center justify-center rounded-2xl border border-dashed border-white/30 bg-black/20 text-xs font-medium tracking-wider text-slate-300 uppercase">
-              Sua logo aqui
-            </div>
+            <img
+              src="/images/Logotipo-Principal.png"
+              alt="Logotipo da marca"
+              className="relative z-10 h-16 w-auto rounded-xl bg-black/25 p-2 md:h-20"
+            />
           </div>
         </header>
 
@@ -37,7 +42,7 @@ function App() {
             <button
               type="button"
               onClick={clearAll}
-              className="rounded-2xl border border-red-300/25 bg-red-500/10 px-5 py-3 text-sm font-semibold text-red-200 transition hover:border-red-300/45 hover:bg-red-500/20"
+              className="border-brand-secondary/40 bg-brand-secondary/15 text-brand-tertiary hover:border-brand-secondary hover:bg-brand-secondary/25 rounded-2xl border px-5 py-3 text-sm font-semibold transition"
             >
               Limpar todos os dados
             </button>
@@ -49,7 +54,7 @@ function App() {
           </section>
         </main>
 
-        <footer className="pb-2 text-center text-xs text-slate-400">
+        <footer className="text-brand-muted pb-2 text-center text-xs tracking-wide">
           Desenvolvido para sorteios de alta performance com experiencia premium.
         </footer>
       </div>

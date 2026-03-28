@@ -20,12 +20,12 @@ export function PrizesManager() {
               value={prize}
               onChange={(event) => updatePrize(index, event.target.value)}
               placeholder={`Premio #${index + 1}`}
-              className="focus:border-brand-primary focus:ring-brand-primary/30 w-full rounded-xl border border-white/20 bg-slate-950/70 px-3 py-2 text-sm text-slate-100 transition outline-none focus:ring-2"
+              className="focus:border-brand-secondary focus:ring-brand-secondary/30 border-brand-line bg-brand-surface/85 text-brand-tertiary w-full rounded-xl border px-3 py-2 text-sm transition outline-none focus:ring-2"
             />
             <button
               type="button"
               onClick={() => removePrize(index)}
-              className="hover:border-brand-secondary hover:text-brand-secondary rounded-xl border border-white/20 px-3 text-sm font-semibold text-slate-200 transition"
+              className="hover:border-brand-secondary hover:text-brand-secondary border-brand-line text-brand-muted rounded-xl border px-3 text-sm font-semibold transition"
             >
               Remover
             </button>
@@ -36,7 +36,7 @@ export function PrizesManager() {
       <button
         type="button"
         onClick={addPrize}
-        className="bg-brand-secondary mt-4 rounded-xl px-4 py-2 text-sm font-semibold text-slate-900 transition hover:brightness-110"
+        className="bg-brand-secondary text-brand-ink mt-4 rounded-xl px-4 py-2 text-sm font-semibold transition hover:brightness-110"
       >
         + Adicionar premio
       </button>

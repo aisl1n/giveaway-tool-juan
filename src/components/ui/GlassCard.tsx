@@ -10,17 +10,17 @@ export function GlassCard({ title, subtitle, className, children }: GlassCardPro
   return (
     <section
       className={[
-        'rounded-3xl border border-white/15 bg-white/10 p-5 shadow-[0_22px_54px_rgba(0,0,0,0.35)] backdrop-blur-xl',
+        'border-brand-line bg-brand-panel/55 rounded-3xl border p-5 shadow-[0_22px_54px_rgba(0,0,0,0.35)] backdrop-blur-xl',
         className,
       ]
         .filter(Boolean)
         .join(' ')}
     >
       <header className="mb-4 space-y-1">
-        <h2 className="font-heading text-xl font-semibold tracking-tight text-slate-50">
+        <h2 className="font-heading text-brand-tertiary text-xl font-semibold tracking-wide">
           {title}
         </h2>
-        {subtitle ? <p className="text-sm text-slate-300">{subtitle}</p> : null}
+        {subtitle ? <p className="text-brand-muted text-sm">{subtitle}</p> : null}
       </header>
       {children}
     </section>
