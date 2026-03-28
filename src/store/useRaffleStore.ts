@@ -1,25 +1,45 @@
 import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
 
+import {
+  DEFAULT_PRIZE_COUNT,
+  EMPTY_LIST_LENGTH,
+  MINIMUM_PRIZE_COUNT,
+  NO_AVAILABLE_PRIZE_INDEX,
+  PRIZE_LABEL_PREFIX,
+  RANDOM_ID_RADIX,
+  RANDOM_ID_SLICE_START,
+  STORAGE_KEY,
+} from '../constants/raffle'
 import { getEligibleParticipants, normalizePrizes } from '../lib/raffle'
 import type { DrawResult, RaffleStore } from '../types/raffle'
 
-const initialState = {
-  participantsText: '',
-  prizes: ['Prêmio #1', 'Prêmio #2', 'Prêmio #3'],
+const buildPrizeLabel = (position: number) => `${PRIZE_LABEL_PREFIX}${position}`
+
+const buildDefaultPrizes = () =>
+  Array.from({ length: DEFAULT_PRIZE_COUNT }, (_, index) => buildPrizeLabel(index + 1))
+
+const createInitialState = () => ({
+  participantsNames: '',
+  prizes: buildDefaultPrizes(),
   results: [] as DrawResult[],
-}
+})
+
+const createDrawId = () =>
+  `${Date.now()}-${Math.random().toString(RANDOM_ID_RADIX).slice(RANDOM_ID_SLICE_START)}`
+
+const pickRandomItem = <T>(items: T[]) => items[Math.floor(Math.random() * items.length)]
 
 export const useRaffleStore = create<RaffleStore>()(
   persist(
     (set, get) => ({
-      ...initialState,
-      setParticipantsText: (value) => {
-        set({ participantsText: value })
+      ...createInitialState(),
+      setParticipantsNames: (value) => {
+        set({ participantsNames: value })
       },
       addPrize: () => {
         const { prizes } = get()
-        set({ prizes: [...prizes, `Prêmio #${prizes.length + 1}`] })
+        set({ prizes: [...prizes, buildPrizeLabel(prizes.length + 1)] })
       },
       updatePrize: (index, value) => {
         const { prizes } = get()
@@ -29,32 +49,37 @@ export const useRaffleStore = create<RaffleStore>()(
       },
       removePrize: (index) => {
         const { prizes } = get()
-        if (prizes.length <= 1) {
+        if (prizes.length <= MINIMUM_PRIZE_COUNT) {
           return
         }
 
         const nextPrizes = prizes.filter((_, itemIndex) => itemIndex !== index)
         const filteredPrizes = normalizePrizes(nextPrizes)
 
-        // Reset draws when prize structure changes to avoid inconsistent mappings.
         set({
-          prizes: filteredPrizes.length > 0 ? nextPrizes : ['Prêmio #1'],
+          prizes:
+            filteredPrizes.length > EMPTY_LIST_LENGTH
+              ? nextPrizes
+              : [buildPrizeLabel(MINIMUM_PRIZE_COUNT)],
           results: [],
         })
       },
       drawNextWinner: () => {
-        const { participantsText, prizes, results } = get()
+        const { participantsNames, prizes, results } = get()
         const validPrizes = normalizePrizes(prizes)
-        const eligible = getEligibleParticipants(participantsText, results)
+        const eligible = getEligibleParticipants(participantsNames, results)
         const nextPrizeIndex = validPrizes.length - 1 - results.length
 
-        if (nextPrizeIndex < 0 || eligible.length === 0) {
+        if (
+          nextPrizeIndex <= NO_AVAILABLE_PRIZE_INDEX ||
+          eligible.length === EMPTY_LIST_LENGTH
+        ) {
           return null
         }
 
-        const winner = eligible[Math.floor(Math.random() * eligible.length)]
+        const winner = pickRandomItem(eligible)
         const result: DrawResult = {
-          id: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
+          id: createDrawId(),
           prizeLabel: validPrizes[nextPrizeIndex],
           winnerName: winner,
           drawOrder: results.length + 1,
@@ -68,14 +93,14 @@ export const useRaffleStore = create<RaffleStore>()(
         set({ results: [] })
       },
       clearAll: () => {
-        set({ ...initialState })
+        set(createInitialState())
       },
     }),
     {
-      name: 'pt-premium-raffle',
+      name: STORAGE_KEY,
       storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({
-        participantsText: state.participantsText,
+        participantsNames: state.participantsNames,
         prizes: state.prizes,
         results: state.results,
       }),

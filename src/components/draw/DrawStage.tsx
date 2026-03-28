@@ -8,7 +8,7 @@ import type { DrawPhase, DrawResult } from '../../types/raffle'
 import { GlassCard } from '../ui/GlassCard'
 
 export function DrawStage() {
-  const participantsText = useRaffleStore((state) => state.participantsText)
+  const participantsNames = useRaffleStore((state) => state.participantsNames)
   const prizes = useRaffleStore((state) => state.prizes)
   const results = useRaffleStore((state) => state.results)
   const drawNextWinner = useRaffleStore((state) => state.drawNextWinner)
@@ -21,8 +21,8 @@ export function DrawStage() {
 
   const validPrizes = useMemo(() => normalizePrizes(prizes), [prizes])
   const eligibleParticipants = useMemo(
-    () => getEligibleParticipants(participantsText, results),
-    [participantsText, results],
+    () => getEligibleParticipants(participantsNames, results),
+    [participantsNames, results],
   )
 
   const nextPrizeIndex = validPrizes.length - 1 - results.length

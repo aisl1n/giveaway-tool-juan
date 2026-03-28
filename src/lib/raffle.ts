@@ -26,10 +26,10 @@ export const normalizePrizes = (prizes: string[]): string[] => {
 }
 
 export const getEligibleParticipants = (
-  participantsText: string,
+  participantsNames: string,
   results: DrawResult[],
 ): string[] => {
-  const allParticipants = parseParticipants(participantsText)
+  const allParticipants = parseParticipants(participantsNames)
   const drawnNames = new Set(
     results.map((result) => result.winnerName.toLocaleLowerCase('pt-BR')),
   )

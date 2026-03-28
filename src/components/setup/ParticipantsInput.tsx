@@ -2,8 +2,8 @@ import { useRaffleStore } from '../../store/useRaffleStore'
 import { GlassCard } from '../ui/GlassCard'
 
 export function ParticipantsInput() {
-  const participantsText = useRaffleStore((state) => state.participantsText)
-  const setParticipantsText = useRaffleStore((state) => state.setParticipantsText)
+  const participantsNames = useRaffleStore((state) => state.participantsNames)
+  const setParticipantsNames = useRaffleStore((state) => state.setParticipantsNames)
 
   return (
     <GlassCard
@@ -15,8 +15,8 @@ export function ParticipantsInput() {
       </label>
       <textarea
         id="participants-textarea"
-        value={participantsText}
-        onChange={(event) => setParticipantsText(event.target.value)}
+        value={participantsNames}
+        onChange={(event) => setParticipantsNames(event.target.value)}
         placeholder={'Ana\nBruno\nCarlos\nDaniela'}
         className="focus:border-brand-primary focus:ring-brand-primary/30 min-h-52 w-full resize-y rounded-2xl border border-white/20 bg-slate-950/70 px-4 py-3 text-sm text-slate-100 transition outline-none focus:ring-2"
       />

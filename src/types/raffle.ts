@@ -9,13 +9,13 @@ export interface DrawResult {
 export type DrawPhase = 'idle' | 'countdown' | 'rolling' | 'result'
 
 export interface RaffleState {
-  participantsText: string
+  participantsNames: string
   prizes: string[]
   results: DrawResult[]
 }
 
 export interface RaffleActions {
-  setParticipantsText: (value: string) => void
+  setParticipantsNames: (value: string) => void
   addPrize: () => void
   updatePrize: (index: number, value: string) => void
   removePrize: (index: number) => void
