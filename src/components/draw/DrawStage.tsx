@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 import { launchBrandConfetti } from '../../lib/confetti'
 import { getEligibleParticipants, normalizePrizes, sleep } from '../../lib/raffle'
@@ -7,7 +7,11 @@ import { useRaffleStore } from '../../store/useRaffleStore'
 import type { DrawPhase, DrawResult } from '../../types/raffle'
 import { GlassCard } from '../ui/GlassCard'
 
-export function DrawStage() {
+type DrawStageProps = {
+  autoStartSignal?: number
+}
+
+export function DrawStage({ autoStartSignal }: DrawStageProps) {
   const participantsNames = useRaffleStore((state) => state.participantsNames)
   const prizes = useRaffleStore((state) => state.prizes)
   const results = useRaffleStore((state) => state.results)
@@ -18,6 +22,7 @@ export function DrawStage() {
   const [countdownValue, setCountdownValue] = useState<number>(3)
   const [rollingName, setRollingName] = useState<string>('Pronto para sortear')
   const [lastDraw, setLastDraw] = useState<DrawResult | null>(null)
+  const lastAutoStartSignalRef = useRef<number | undefined>(undefined)
 
   const validPrizes = useMemo(() => normalizePrizes(prizes), [prizes])
   const eligibleParticipants = useMemo(
@@ -73,6 +78,19 @@ export function DrawStage() {
     setPhase('result')
     launchBrandConfetti()
   }
+
+  useEffect(() => {
+    if (autoStartSignal === undefined) {
+      return
+    }
+
+    if (lastAutoStartSignalRef.current === autoStartSignal) {
+      return
+    }
+
+    lastAutoStartSignalRef.current = autoStartSignal
+    void runDrawExperience()
+  }, [autoStartSignal, canDraw])
 
   return (
     <GlassCard
