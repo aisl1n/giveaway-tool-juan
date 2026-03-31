@@ -17,6 +17,9 @@ export function ParticipantsInput() {
         id="participants-textarea"
         value={participantsNames}
         onChange={(event) => setParticipantsNames(event.target.value)}
+        spellCheck={false}
+        autoCorrect="off"
+        autoCapitalize="off"
         placeholder={'Ana\nBruno\nCarlos\nDaniela'}
         className="focus:border-brand-secondary focus:ring-brand-secondary/30 border-brand-line bg-brand-surface/85 text-brand-tertiary min-h-52 w-full resize-y rounded-2xl border px-4 py-3 text-sm transition outline-none focus:ring-2"
       />

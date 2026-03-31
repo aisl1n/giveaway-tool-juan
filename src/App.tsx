@@ -1,15 +1,26 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import { DrawStage } from './components/draw/DrawStage'
 import { WinnersList } from './components/draw/WinnersList'
 import { ParticipantsInput } from './components/setup/ParticipantsInput'
 import { PrizesManager } from './components/setup/PrizesManager'
+import { normalizePrizes } from './lib/raffle'
 import { useRaffleStore } from './store/useRaffleStore'
 
 function App() {
   const clearAll = useRaffleStore((state) => state.clearAll)
+  const prizes = useRaffleStore((state) => state.prizes)
+  const results = useRaffleStore((state) => state.results)
   const [isDrawModalOpen, setIsDrawModalOpen] = useState(false)
   const [autoStartSignal, setAutoStartSignal] = useState(0)
+
+  const handleClearAll = () => {
+    setIsDrawModalOpen(false)
+    clearAll()
+  }
+
+  const validPrizes = useMemo(() => normalizePrizes(prizes), [prizes])
+  const isDrawCompleted = validPrizes.length > 0 && results.length >= validPrizes.length
 
   useEffect(() => {
     if (!isDrawModalOpen) {
@@ -34,10 +45,10 @@ function App() {
   }
 
   return (
-    <div className="relative min-h-screen overflow-hidden px-4 py-2">
+    <div className="relative min-h-screen overflow-hidden p-4">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_16%_12%,rgba(255,115,0,0.24),transparent_44%),radial-gradient(circle_at_82%_14%,rgba(69,51,175,0.42),transparent_40%)]" />
 
-      <div className="space-y-2">
+      <div className="space-y-4">
         <header className="border-brand-line bg-brand-panel/50 relative mx-auto w-fit overflow-hidden rounded-2xl border px-4 py-2 shadow-[0_14px_34px_rgba(0,0,0,0.32)] backdrop-blur-lg md:px-5 md:py-3">
           <div className="bg-brand-primary/30 pointer-events-none absolute -top-16 -right-10 h-32 w-32 rounded-full blur-3xl" />
           <div className="bg-brand-secondary/24 pointer-events-none absolute -bottom-16 -left-12 h-32 w-32 rounded-full blur-3xl" />
@@ -59,36 +70,44 @@ function App() {
           </div>
         </header>
 
-        <main className="space-y-6">
-          <section className="mx-auto grid w-full max-w-6xl gap-6 lg:grid-cols-2">
-            <ParticipantsInput />
-            <PrizesManager />
-          </section>
+        <main className="space-y-4">
+          {isDrawCompleted ? (
+            <section className="mx-auto w-full max-w-4xl">
+              <WinnersList />
+            </section>
+          ) : (
+            <section className="mx-auto grid w-full max-w-6xl gap-6 lg:grid-cols-2">
+              <ParticipantsInput />
+              <PrizesManager />
+            </section>
+          )}
 
           <section className="flex items-center justify-center gap-3">
             <button
               type="button"
-              onClick={clearAll}
+              onClick={handleClearAll}
               className="border-brand-secondary/40 bg-brand-secondary/15 text-brand-tertiary hover:border-brand-secondary hover:bg-brand-secondary/25 rounded-2xl border px-5 py-3 text-base font-semibold transition"
             >
               Limpar todos os dados
             </button>
-            <button
-              type="button"
-              onClick={openDrawModal}
-              className="bg-brand-primary text-brand-tertiary w-full max-w-60 rounded-2xl px-5 py-3 text-base font-semibold shadow-[0_14px_30px_rgba(255,115,0,0.3)] transition hover:brightness-110"
-            >
-              Iniciar sorteio
-            </button>
+            {!isDrawCompleted ? (
+              <button
+                type="button"
+                onClick={openDrawModal}
+                className="bg-brand-primary text-brand-tertiary w-full max-w-60 rounded-2xl px-5 py-3 text-base font-semibold shadow-[0_14px_30px_rgba(255,115,0,0.3)] transition hover:brightness-110"
+              >
+                Iniciar sorteio
+              </button>
+            ) : null}
           </section>
         </main>
 
-        <footer className="text-brand-muted pb-2 text-center text-xs tracking-wide">
+        <footer className="text-brand-muted pb-2 text-center text-[10px] tracking-wide">
           Desenvolvido para sorteios de alta performance com experiencia premium.
         </footer>
       </div>
 
-      {isDrawModalOpen ? (
+      {isDrawModalOpen && !isDrawCompleted ? (
         <div className="fixed inset-0 z-50 overflow-y-auto p-2 md:p-4">
           <button
             type="button"
@@ -118,10 +137,7 @@ function App() {
                 </button>
               </div>
 
-              <div className="grid gap-3 lg:grid-cols-2">
-                <DrawStage autoStartSignal={autoStartSignal} />
-                <WinnersList />
-              </div>
+              <DrawStage autoStartSignal={autoStartSignal} />
             </div>
           </div>
         </div>

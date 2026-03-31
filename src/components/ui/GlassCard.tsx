@@ -1,7 +1,7 @@
 import type { PropsWithChildren } from 'react'
 
 interface GlassCardProps extends PropsWithChildren {
-  title: string
+  title?: string
   subtitle?: string
   className?: string
 }
@@ -16,12 +16,16 @@ export function GlassCard({ title, subtitle, className, children }: GlassCardPro
         .filter(Boolean)
         .join(' ')}
     >
-      <header className="mb-4 space-y-1">
-        <h2 className="font-heading text-brand-tertiary text-xl font-semibold tracking-wide">
-          {title}
-        </h2>
-        {subtitle ? <p className="text-brand-muted text-sm">{subtitle}</p> : null}
-      </header>
+      {title || subtitle ? (
+        <header className="mb-4 space-y-1">
+          {title ? (
+            <h2 className="font-heading text-brand-tertiary text-xl font-semibold tracking-wide">
+              {title}
+            </h2>
+          ) : null}
+          {subtitle ? <p className="text-brand-muted text-sm">{subtitle}</p> : null}
+        </header>
+      ) : null}
       {children}
     </section>
   )
