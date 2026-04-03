@@ -24,10 +24,18 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: 'Anton';
+  src: url('/fonts/Anton-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 @theme {
-  --font-sans: 'Sablon Up Regular', ui-sans-serif, sans-serif;
+  --font-sans: 'Anton', ui-sans-serif, sans-serif;
   --font-college: 'Sablon Up College', ui-sans-serif, sans-serif;
-  --font-heading: 'Sablon Up Regular', ui-sans-serif, sans-serif;
+  --font-heading: 'Anton', ui-sans-serif, sans-serif;
   --font-outline: 'Sablon Up Outline', ui-sans-serif, sans-serif;
 
   --color-brand-primary: #4533af;
@@ -42,7 +50,6 @@
 
 :root {
   color-scheme: dark;
-  font-size: 22px;
 }
 
 * {
