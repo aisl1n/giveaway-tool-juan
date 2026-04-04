@@ -8,7 +8,7 @@ export function ParticipantsInput() {
   return (
     <GlassCard
       title="Participantes"
-      subtitle="Digite um aluno por linha para montar a lista oficial do sorteio."
+      subtitle="Digite um aluno(a) por linha para montar a lista oficial do sorteio."
     >
       <label className="sr-only" htmlFor="participants-textarea">
         Lista de participantes

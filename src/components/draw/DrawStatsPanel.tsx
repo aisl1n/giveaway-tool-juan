@@ -1,6 +1,6 @@
 type DrawStat = {
   label: string
-  value: number
+  value: number | string
 }
 
 type DrawStatsPanelProps = {
@@ -9,9 +9,9 @@ type DrawStatsPanelProps = {
 
 function DrawStatCard({ label, value }: DrawStat) {
   return (
-    <div className="border-brand-line bg-brand-surface/65 w-fit rounded-2xl border px-3 py-3 text-center">
+    <div className="border-brand-line bg-brand-surface/65 w-20 rounded-2xl border px-3 py-3 text-center">
       <p className="text-brand-muted text-[10px] tracking-wider uppercase">{label}</p>
-      <p className="text-brand-tertiary mt-1 text-2xl leading-none font-semibold">
+      <p className="text-brand-tertiary mt-1 text-2xl leading-none font-normal">
         {value}
       </p>
     </div>

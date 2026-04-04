@@ -14,6 +14,10 @@ type DrawStageProps = {
 const CONFIRMED_WINNER_PREVIEW_MS = 4200
 const READY_MESSAGE = 'Pronto para sortear'
 const COUNTDOWN_STEP_MS = 650
+const ROLLING_SPIN_COUNT = 48
+const ROLLING_STEP_MS = 60
+
+const formatStatValue = (value: number) => value.toString().padStart(2, '0')
 
 export function DrawStage({ autoStartSignal }: DrawStageProps) {
   const participantsNames = useRaffleStore((state) => state.participantsNames)
@@ -39,9 +43,9 @@ export function DrawStage({ autoStartSignal }: DrawStageProps) {
   const nextPrizeLabel = nextPrizeIndex >= 0 ? validPrizes[nextPrizeIndex] : null
   const drawCompleted = validPrizes.length > 0 && results.length >= validPrizes.length
   const drawStats = [
-    { label: 'Elegiveis', value: eligibleParticipants.length },
-    { label: 'Premios', value: validPrizes.length },
-    { label: 'Sorteados', value: results.length },
+    { label: 'Elegiveis', value: formatStatValue(eligibleParticipants.length) },
+    { label: 'Prêmios', value: formatStatValue(validPrizes.length) },
+    { label: 'Sorteados', value: formatStatValue(results.length) },
   ]
 
   const canDraw =
@@ -69,11 +73,9 @@ export function DrawStage({ autoStartSignal }: DrawStageProps) {
 
       setPhase('rolling')
 
-      let delay = 34
-      const spins = Math.max(40, eligibleParticipants.length * 6)
       let previousIndex = -1
 
-      for (let index = 0; index < spins; index += 1) {
+      for (let index = 0; index < ROLLING_SPIN_COUNT; index += 1) {
         let randomIndex = Math.floor(Math.random() * eligibleParticipants.length)
 
         // Avoid showing the same name in consecutive frames when possible.
@@ -85,8 +87,7 @@ export function DrawStage({ autoStartSignal }: DrawStageProps) {
 
         previousIndex = randomIndex
         setRollingName(eligibleParticipants[randomIndex])
-        await sleep(delay)
-        delay = Math.min(190, delay + 2.2 + index * 0.16)
+        await sleep(ROLLING_STEP_MS)
       }
 
       const result = drawNextWinner()
@@ -150,7 +151,7 @@ export function DrawStage({ autoStartSignal }: DrawStageProps) {
     <div className="mx-auto flex w-full max-w-5xl flex-col gap-4">
       <div className="space-y-4">
         <div className="border-brand-line bg-brand-surface/55 flex w-full items-center justify-between gap-4 rounded-3xl border px-4 py-4 text-center">
-          <div className="flex flex-col">
+          <div className="flex w-1/3 flex-col">
             <p className="text-brand-muted text-[10px] tracking-[0.18em] uppercase">
               Próximo prêmio
             </p>
