@@ -44,11 +44,12 @@ function App() {
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_16%_12%,rgba(255,115,0,0.24),transparent_44%),radial-gradient(circle_at_82%_14%,rgba(69,51,175,0.42),transparent_40%)]" />
 
       <div className="space-y-4">
-        <header className="border-brand-line bg-brand-panel/50 relative mx-auto w-fit overflow-hidden rounded-2xl border px-4 py-2 shadow-[0_14px_34px_rgba(0,0,0,0.32)] backdrop-blur-lg md:px-5 md:py-3">
+        <header className="border-brand-line bg-brand-panel/80 relative mx-auto w-fit overflow-hidden rounded-2xl border px-4 py-2 shadow-[0_14px_34px_rgba(0,0,0,0.32)] backdrop-blur-sm md:px-5 md:py-3">
           <div className="bg-brand-primary/30 pointer-events-none absolute -top-16 -right-10 h-32 w-32 rounded-full blur-3xl" />
           <div className="bg-brand-secondary/24 pointer-events-none absolute -bottom-16 -left-12 h-32 w-32 rounded-full blur-3xl" />
+          <div className="pointer-events-none absolute inset-y-0 left-0 w-32 bg-[radial-gradient(circle_at_20%_50%,rgba(255,115,0,0.35),transparent_68%)]" />
 
-          <div className="flex flex-col items-center gap-2 md:flex-row md:items-center md:gap-4">
+          <div className="relative z-10 flex flex-col items-center gap-2 md:flex-row md:items-center md:gap-4">
             <img
               src="/images/Logotipo-Principal.png"
               alt="Logotipo da marca"
