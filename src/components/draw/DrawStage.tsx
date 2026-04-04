@@ -11,7 +11,7 @@ type DrawStageProps = {
   autoStartSignal?: number
 }
 
-const CONFIRMED_WINNER_PREVIEW_MS = 4200
+const CONFIRMED_WINNER_PREVIEW_MS = 6200
 const READY_MESSAGE = 'Pronto para sortear'
 const COUNTDOWN_STEP_MS = 650
 const ROLLING_SPIN_COUNT = 48
@@ -78,7 +78,6 @@ export function DrawStage({ autoStartSignal }: DrawStageProps) {
       for (let index = 0; index < ROLLING_SPIN_COUNT; index += 1) {
         let randomIndex = Math.floor(Math.random() * eligibleParticipants.length)
 
-        // Avoid showing the same name in consecutive frames when possible.
         if (eligibleParticipants.length > 1) {
           while (randomIndex === previousIndex) {
             randomIndex = Math.floor(Math.random() * eligibleParticipants.length)
@@ -150,8 +149,8 @@ export function DrawStage({ autoStartSignal }: DrawStageProps) {
   return (
     <div className="mx-auto flex w-full max-w-5xl flex-col gap-4">
       <div className="space-y-4">
-        <div className="border-brand-line bg-brand-surface/55 flex w-full items-center justify-between gap-4 rounded-3xl border px-4 py-4 text-center">
-          <div className="flex w-1/3 flex-col">
+        <div className="border-brand-line bg-brand-surface/55 flex w-full flex-col items-center gap-4 rounded-3xl border px-4 py-4 text-center md:flex-row md:justify-between">
+          <div className="flex w-full flex-col md:w-1/3">
             <p className="text-brand-muted text-[10px] tracking-[0.18em] uppercase">
               Próximo prêmio
             </p>
@@ -179,9 +178,17 @@ export function DrawStage({ autoStartSignal }: DrawStageProps) {
             </AnimatePresence>
           ) : (
             <div className="space-y-3">
-              <p className="text-brand-muted text-xs tracking-[0.18em] uppercase">
-                {phase === 'rolling' ? 'Sorteando nomes...' : 'Ganhador'}
-              </p>
+              {phase === 'rolling' ? (
+                <p className="text-brand-muted text-xs tracking-[0.18em] uppercase">
+                  Sorteando nomes...
+                </p>
+              ) : null}
+
+              {phase === 'result' ? (
+                <p className="text-brand-muted text-xs tracking-[0.18em] uppercase">
+                  Ganhador
+                </p>
+              ) : null}
 
               <AnimatePresence initial={false}>
                 <p className="font-heading text-brand-tertiary text-4xl leading-tight font-semibold md:text-6xl lg:text-7xl">
@@ -223,7 +230,15 @@ export function DrawStage({ autoStartSignal }: DrawStageProps) {
           ) : null}
         </AnimatePresence>
 
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap justify-end gap-2">
+          <button
+            type="button"
+            onClick={handleResetDraws}
+            disabled={phase === 'countdown' || phase === 'rolling'}
+            className="hover:border-brand-secondary hover:text-brand-secondary border-brand-line text-brand-tertiary rounded-2xl border px-5 py-3 text-sm font-normal transition disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            Reiniciar sorteio
+          </button>
           <button
             type="button"
             onClick={() => {
@@ -235,14 +250,6 @@ export function DrawStage({ autoStartSignal }: DrawStageProps) {
             {phase === 'countdown' || phase === 'rolling'
               ? 'Sorteando...'
               : 'Sortear agora'}
-          </button>
-          <button
-            type="button"
-            onClick={handleResetDraws}
-            disabled={phase === 'countdown' || phase === 'rolling'}
-            className="hover:border-brand-secondary hover:text-brand-secondary border-brand-line text-brand-tertiary rounded-2xl border px-5 py-3 text-sm font-normal transition disabled:cursor-not-allowed disabled:opacity-40"
-          >
-            Reiniciar sorteio
           </button>
         </div>
 

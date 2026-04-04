@@ -28,7 +28,7 @@ function App() {
   }
 
   return (
-    <div className="relative min-h-screen overflow-hidden p-4">
+    <div className="relative min-h-screen overflow-hidden px-3 py-4 sm:p-4">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_16%_12%,rgba(255,115,0,0.24),transparent_44%),radial-gradient(circle_at_82%_14%,rgba(69,51,175,0.42),transparent_40%)]" />
 
       <div className="space-y-4">
@@ -65,11 +65,11 @@ function App() {
             </section>
           )}
 
-          <section className="flex items-center justify-center gap-3">
+          <section className="flex flex-col items-stretch justify-center gap-2 sm:flex-row sm:items-center sm:gap-3">
             <button
               type="button"
               onClick={handleClearAll}
-              className="border-brand-secondary/40 bg-brand-secondary/15 text-brand-tertiary hover:border-brand-secondary hover:bg-brand-secondary/25 rounded-2xl border px-5 py-3 text-base font-normal transition"
+              className="border-brand-secondary/40 bg-brand-secondary/15 text-brand-tertiary hover:border-brand-secondary hover:bg-brand-secondary/25 w-full rounded-2xl px-4 py-3 text-sm font-normal transition sm:w-auto sm:px-5 sm:text-base"
             >
               Limpar todos os dados
             </button>
@@ -77,7 +77,7 @@ function App() {
               <button
                 type="button"
                 onClick={openDrawModal}
-                className="bg-brand-primary text-brand-tertiary w-full max-w-60 rounded-2xl px-5 py-3 text-base font-normal shadow-[0_14px_30px_rgba(255,115,0,0.3)] transition hover:brightness-110"
+                className="bg-brand-primary text-brand-tertiary w-full rounded-2xl px-4 py-3 text-sm font-normal shadow-[0_14px_30px_rgba(255,115,0,0.3)] transition hover:brightness-110 sm:max-w-60 sm:px-5 sm:text-base"
               >
                 Iniciar sorteio
               </button>

@@ -13,7 +13,7 @@ export function PrizesManager() {
     <GlassCard title="Prêmios" subtitle="Cadastre os prêmios que serão sorteados.">
       <div className="space-y-3">
         {prizes.map((prize, index) => (
-          <div key={`prize-${index}`} className="flex gap-2">
+          <div key={`prize-${index}`} className="flex flex-col gap-2 sm:flex-row">
             <input
               type="text"
               value={prize}
@@ -25,7 +25,7 @@ export function PrizesManager() {
             <button
               type="button"
               onClick={() => removePrize(index)}
-              className="hover:border-brand-secondary hover:text-brand-secondary border-brand-line text-brand-muted flex items-center justify-center rounded-xl border px-3 text-sm font-normal transition"
+              className="hover:border-brand-secondary hover:text-brand-secondary border-brand-line text-brand-muted flex w-full items-center justify-center rounded-xl border px-3 py-2 text-sm font-normal transition sm:w-auto sm:py-0"
             >
               <X className="mr-1 h-4 w-4" />
               Remover
@@ -37,7 +37,7 @@ export function PrizesManager() {
       <button
         type="button"
         onClick={addPrize}
-        className="bg-brand-secondary text-brand-tertiary mt-4 flex items-center justify-center rounded-xl px-4 py-2 text-sm transition hover:brightness-110"
+        className="bg-brand-secondary text-brand-tertiary mt-4 flex w-full items-center justify-center rounded-xl px-4 py-2 text-sm transition hover:brightness-110 sm:w-auto"
       >
         <PlusIcon className="mr-2" />
         Adicionar prêmio

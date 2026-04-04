@@ -10,7 +10,7 @@ export function GlassCard({ title, subtitle, className, children }: GlassCardPro
   return (
     <section
       className={[
-        'border-brand-line bg-brand-panel/55 rounded-3xl border p-5 shadow-[0_22px_54px_rgba(0,0,0,0.35)] backdrop-blur-xl',
+        'border-brand-line bg-brand-panel/55 rounded-3xl border p-4 shadow-[0_22px_54px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-5',
         className,
       ]
         .filter(Boolean)
