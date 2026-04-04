@@ -1,4 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion'
+import { Dumbbell, RotateCcw } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { launchBrandConfetti } from '../../lib/confetti'
@@ -43,7 +44,7 @@ export function DrawStage({ autoStartSignal }: DrawStageProps) {
   const nextPrizeLabel = nextPrizeIndex >= 0 ? validPrizes[nextPrizeIndex] : null
   const drawCompleted = validPrizes.length > 0 && results.length >= validPrizes.length
   const drawStats = [
-    { label: 'Elegiveis', value: formatStatValue(eligibleParticipants.length) },
+    { label: 'Elegíveis', value: formatStatValue(eligibleParticipants.length) },
     { label: 'Prêmios', value: formatStatValue(validPrizes.length) },
     { label: 'Sorteados', value: formatStatValue(results.length) },
   ]
@@ -186,7 +187,7 @@ export function DrawStage({ autoStartSignal }: DrawStageProps) {
 
               {phase === 'result' ? (
                 <p className="text-brand-muted text-xs tracking-[0.18em] uppercase">
-                  Ganhador
+                  Ganhador(a)
                 </p>
               ) : null}
 
@@ -235,8 +236,9 @@ export function DrawStage({ autoStartSignal }: DrawStageProps) {
             type="button"
             onClick={handleResetDraws}
             disabled={phase === 'countdown' || phase === 'rolling'}
-            className="hover:border-brand-secondary hover:text-brand-secondary border-brand-line text-brand-tertiary rounded-2xl border px-5 py-3 text-sm font-normal transition disabled:cursor-not-allowed disabled:opacity-40"
+            className="hover:border-brand-secondary hover:text-brand-secondary border-brand-line text-brand-tertiary flex items-center gap-2 rounded-2xl border px-5 py-3 text-sm font-normal transition disabled:cursor-not-allowed disabled:opacity-40"
           >
+            <RotateCcw className="h-4 w-4" />
             Reiniciar sorteio
           </button>
           <button
@@ -245,11 +247,21 @@ export function DrawStage({ autoStartSignal }: DrawStageProps) {
               void runDrawExperience()
             }}
             disabled={!canDraw}
-            className="bg-brand-primary text-brand-tertiary rounded-2xl px-5 py-3 text-sm font-normal transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40"
+            className="bg-brand-primary text-brand-tertiary flex items-center gap-2 rounded-2xl px-5 py-3 text-sm font-normal transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40"
           >
-            {phase === 'countdown' || phase === 'rolling'
-              ? 'Sorteando...'
-              : 'Sortear agora'}
+            {phase === 'countdown' || phase === 'rolling' ? (
+              <>
+                <span className="inline-block animate-spin">
+                  <Dumbbell className="h-4 w-4" />
+                </span>
+                Sorteando...
+              </>
+            ) : (
+              <>
+                <Dumbbell className="h-4 w-4" />
+                Sortear agora
+              </>
+            )}
           </button>
         </div>
 

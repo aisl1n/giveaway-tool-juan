@@ -1,3 +1,4 @@
+import { Dumbbell, Trash2 } from 'lucide-react'
 import { useMemo, useState } from 'react'
 
 import { DrawModal } from './components/draw/DrawModal'
@@ -13,6 +14,17 @@ function App() {
   const results = useRaffleStore((state) => state.results)
   const [isDrawModalOpen, setIsDrawModalOpen] = useState(false)
   const [autoStartSignal, setAutoStartSignal] = useState(0)
+  const [motivationalMessage] = useState(() => {
+    const messages = [
+      'Treine forte, mantenha a constância e respeite o processo.',
+      'Disciplina na academia transforma esforço em resultado.',
+      'Hoje é dia de suor, foco e evolução dentro e fora do treino.',
+      'Sem pressa, sem desculpas: cada repetição fortalece você.',
+      'Corpo forte, mente afiada e energia alta para evoluir sempre.',
+    ]
+
+    return messages[Math.floor(Math.random() * messages.length)]
+  })
 
   const handleClearAll = () => {
     setIsDrawModalOpen(false)
@@ -47,7 +59,7 @@ function App() {
                 Fit Club Giveaway
               </p>
               <h1 className="font-heading text-brand-tertiary text-lg font-normal tracking-normal md:text-xl">
-                Sorteio Oficial Juan Personal Trainer
+                Sorteio Oficial - Juan Personal Trainer
               </h1>
             </div>
           </div>
@@ -69,16 +81,18 @@ function App() {
             <button
               type="button"
               onClick={handleClearAll}
-              className="border-brand-secondary/40 bg-brand-secondary/15 text-brand-tertiary hover:border-brand-secondary hover:bg-brand-secondary/25 w-full rounded-2xl px-4 py-3 text-sm font-normal transition sm:w-auto sm:px-5 sm:text-base"
+              className="border-brand-secondary/40 bg-brand-secondary/15 text-brand-tertiary hover:border-brand-secondary hover:bg-brand-secondary/25 flex w-full items-center justify-center gap-2 rounded-2xl px-4 py-3 text-sm font-normal transition sm:w-auto sm:px-5 sm:text-base"
             >
+              <Trash2 className="h-4 w-4" />
               Limpar todos os dados
             </button>
             {!isDrawCompleted ? (
               <button
                 type="button"
                 onClick={openDrawModal}
-                className="bg-brand-primary text-brand-tertiary w-full rounded-2xl px-4 py-3 text-sm font-normal shadow-[0_14px_30px_rgba(255,115,0,0.3)] transition hover:brightness-110 sm:max-w-60 sm:px-5 sm:text-base"
+                className="bg-brand-primary text-brand-tertiary flex w-full items-center justify-center gap-2 rounded-2xl px-4 py-3 text-sm font-normal shadow-[0_14px_30px_rgba(255,115,0,0.3)] transition hover:brightness-110 sm:max-w-60 sm:px-5 sm:text-base"
               >
+                <Dumbbell className="h-4 w-4" />
                 Iniciar sorteio
               </button>
             ) : null}
@@ -86,7 +100,9 @@ function App() {
         </main>
 
         <footer className="text-brand-muted pb-2 text-center text-[10px] tracking-wide">
-          Desenvolvido para sorteios de alta performance com experiencia premium.
+          <p className="text-brand-tertiary/85 text-[11px] font-medium tracking-[0.12em] uppercase">
+            {motivationalMessage}
+          </p>
         </footer>
       </div>
 
