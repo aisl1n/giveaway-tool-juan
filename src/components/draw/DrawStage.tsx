@@ -230,7 +230,7 @@ export function DrawStage({ autoStartSignal }: DrawStageProps) {
               void runDrawExperience()
             }}
             disabled={!canDraw}
-            className="bg-brand-primary text-brand-tertiary rounded-2xl px-5 py-3 text-sm font-semibold transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40"
+            className="bg-brand-primary text-brand-tertiary rounded-2xl px-5 py-3 text-sm font-normal transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40"
           >
             {phase === 'countdown' || phase === 'rolling'
               ? 'Sorteando...'
@@ -240,7 +240,7 @@ export function DrawStage({ autoStartSignal }: DrawStageProps) {
             type="button"
             onClick={handleResetDraws}
             disabled={phase === 'countdown' || phase === 'rolling'}
-            className="hover:border-brand-secondary hover:text-brand-secondary border-brand-line text-brand-tertiary rounded-2xl border px-5 py-3 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-40"
+            className="hover:border-brand-secondary hover:text-brand-secondary border-brand-line text-brand-tertiary rounded-2xl border px-5 py-3 text-sm font-normal transition disabled:cursor-not-allowed disabled:opacity-40"
           >
             Reiniciar sorteio
           </button>
