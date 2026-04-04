@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 
-import { DrawStage } from './components/draw/DrawStage'
+import { DrawModal } from './components/draw/DrawModal'
 import { WinnersList } from './components/draw/WinnersList'
 import { ParticipantsInput } from './components/setup/ParticipantsInput'
 import { PrizesManager } from './components/setup/PrizesManager'
@@ -21,23 +21,6 @@ function App() {
 
   const validPrizes = useMemo(() => normalizePrizes(prizes), [prizes])
   const isDrawCompleted = validPrizes.length > 0 && results.length >= validPrizes.length
-
-  useEffect(() => {
-    if (!isDrawModalOpen) {
-      return
-    }
-
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        setIsDrawModalOpen(false)
-      }
-    }
-
-    window.addEventListener('keydown', onKeyDown)
-    return () => {
-      window.removeEventListener('keydown', onKeyDown)
-    }
-  }, [isDrawModalOpen])
 
   const openDrawModal = () => {
     setAutoStartSignal((value) => value + 1)
@@ -63,7 +46,7 @@ function App() {
               <p className="text-brand-secondary/90 text-[10px] tracking-[0.2em] uppercase">
                 Fit Club Giveaway
               </p>
-              <h1 className="font-heading text-brand-tertiary text-lg font-semibold tracking-normal md:text-xl">
+              <h1 className="font-heading text-brand-tertiary text-lg font-normal tracking-normal md:text-xl">
                 Sorteio Oficial Juan Personal Trainer
               </h1>
             </div>
@@ -86,7 +69,7 @@ function App() {
             <button
               type="button"
               onClick={handleClearAll}
-              className="border-brand-secondary/40 bg-brand-secondary/15 text-brand-tertiary hover:border-brand-secondary hover:bg-brand-secondary/25 rounded-2xl border px-5 py-3 text-base font-semibold transition"
+              className="border-brand-secondary/40 bg-brand-secondary/15 text-brand-tertiary hover:border-brand-secondary hover:bg-brand-secondary/25 rounded-2xl border px-5 py-3 text-base font-normal transition"
             >
               Limpar todos os dados
             </button>
@@ -94,7 +77,7 @@ function App() {
               <button
                 type="button"
                 onClick={openDrawModal}
-                className="bg-brand-primary text-brand-tertiary w-full max-w-60 rounded-2xl px-5 py-3 text-base font-semibold shadow-[0_14px_30px_rgba(255,115,0,0.3)] transition hover:brightness-110"
+                className="bg-brand-primary text-brand-tertiary w-full max-w-60 rounded-2xl px-5 py-3 text-base font-normal shadow-[0_14px_30px_rgba(255,115,0,0.3)] transition hover:brightness-110"
               >
                 Iniciar sorteio
               </button>
@@ -107,41 +90,12 @@ function App() {
         </footer>
       </div>
 
-      {isDrawModalOpen && !isDrawCompleted ? (
-        <div className="fixed inset-0 z-50 overflow-y-auto p-2 md:p-4">
-          <button
-            type="button"
-            aria-label="Fechar modal de sorteio"
-            onClick={() => setIsDrawModalOpen(false)}
-            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-          />
-
-          <div className="relative z-10 mx-auto flex min-h-full w-full max-w-full items-center">
-            <div className="border-brand-line bg-brand-panel/90 max-h-[calc(100vh-1rem)] w-full overflow-y-auto rounded-3xl border p-3 shadow-[0_26px_70px_rgba(0,0,0,0.55)] backdrop-blur-xl md:max-h-[calc(100vh-2rem)] md:p-5">
-              <div className="mb-3 flex items-center justify-between gap-2">
-                <div>
-                  <p className="text-brand-secondary text-xs tracking-[0.2em] uppercase">
-                    Tela de sorteio
-                  </p>
-                  <h2 className="font-heading text-brand-tertiary text-lg font-semibold md:text-xl">
-                    Sorteador oficial
-                  </h2>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={() => setIsDrawModalOpen(false)}
-                  className="border-brand-line text-brand-tertiary hover:border-brand-secondary hover:text-brand-secondary rounded-xl border px-3 py-1 text-xs font-semibold transition"
-                >
-                  Fechar
-                </button>
-              </div>
-
-              <DrawStage autoStartSignal={autoStartSignal} />
-            </div>
-          </div>
-        </div>
-      ) : null}
+      <DrawModal
+        isOpen={isDrawModalOpen}
+        isDrawCompleted={isDrawCompleted}
+        autoStartSignal={autoStartSignal}
+        onClose={() => setIsDrawModalOpen(false)}
+      />
     </div>
   )
 }

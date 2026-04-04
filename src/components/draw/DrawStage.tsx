@@ -5,6 +5,7 @@ import { launchBrandConfetti } from '../../lib/confetti'
 import { getEligibleParticipants, normalizePrizes, sleep } from '../../lib/raffle'
 import { useRaffleStore } from '../../store/useRaffleStore'
 import type { DrawPhase, DrawResult } from '../../types/raffle'
+import { DrawStatsPanel } from './DrawStatsPanel'
 
 type DrawStageProps = {
   autoStartSignal?: number
@@ -37,6 +38,11 @@ export function DrawStage({ autoStartSignal }: DrawStageProps) {
   const nextPrizeIndex = validPrizes.length - 1 - results.length
   const nextPrizeLabel = nextPrizeIndex >= 0 ? validPrizes[nextPrizeIndex] : null
   const drawCompleted = validPrizes.length > 0 && results.length >= validPrizes.length
+  const drawStats = [
+    { label: 'Elegiveis', value: eligibleParticipants.length },
+    { label: 'Premios', value: validPrizes.length },
+    { label: 'Sorteados', value: results.length },
+  ]
 
   const canDraw =
     phase !== 'countdown' &&
@@ -141,124 +147,111 @@ export function DrawStage({ autoStartSignal }: DrawStageProps) {
   }
 
   return (
-    <div className="space-y-5">
-      <div className="border-brand-line bg-brand-surface/55 rounded-3xl border p-4 text-center">
-        <p className="text-brand-muted mb-2 text-xs tracking-[0.18em] uppercase">
-          Proximo premio
-        </p>
-        <p className="text-brand-secondary text-lg font-semibold">
-          {nextPrizeLabel ?? 'Sorteio encerrado'}
-        </p>
-      </div>
-
-      <div className="border-brand-line bg-brand-surface/85 relative flex min-h-52 items-center justify-center overflow-hidden rounded-3xl border p-6 text-center">
-        {phase === 'countdown' ? (
-          <AnimatePresence mode="wait">
-            <motion.p
-              key={`countdown-${countdownValue}`}
-              initial={{ opacity: 0, scale: 0.4, y: 16 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 1.5, y: -18 }}
-              transition={{ duration: 0.45 }}
-              className="font-heading text-brand-secondary text-8xl font-bold"
-            >
-              {countdownValue}
-            </motion.p>
-          </AnimatePresence>
-        ) : (
-          <div className="space-y-2">
-            <p className="text-brand-muted text-xs tracking-[0.18em] uppercase">
-              {phase === 'rolling' ? 'Sorteando nomes...' : 'Ganhador'}
+    <div className="mx-auto flex w-full max-w-5xl flex-col gap-4">
+      <div className="space-y-4">
+        <div className="border-brand-line bg-brand-surface/55 flex w-full items-center justify-between gap-4 rounded-3xl border px-4 py-4 text-center">
+          <div className="flex flex-col">
+            <p className="text-brand-muted text-[10px] tracking-[0.18em] uppercase">
+              Próximo prêmio
             </p>
-
-            <AnimatePresence initial={false}>
-              <p className="font-heading text-brand-tertiary text-4xl leading-tight font-semibold md:text-5xl">
-                <motion.span
-                  key={`${phase}-${rollingName}`}
-                  initial={{ opacity: 0, y: 18 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -12 }}
-                  transition={{ duration: phase === 'rolling' ? 0.1 : 0.2 }}
-                  className="inline-block"
-                >
-                  {rollingName}
-                </motion.span>
-              </p>
-            </AnimatePresence>
+            <p className="text-brand-secondary mt-1 text-2xl font-semibold">
+              {nextPrizeLabel ?? 'Sorteio encerrado'}
+            </p>
           </div>
-        )}
-      </div>
 
-      <AnimatePresence>
-        {lastDraw ? (
-          <motion.div
-            initial={{ opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -12 }}
-            transition={{ duration: 0.3 }}
-            className="border-brand-primary/45 bg-brand-primary/15 rounded-2xl border p-4 text-center"
+          <DrawStatsPanel items={drawStats} />
+        </div>
+
+        <div className="border-brand-line bg-brand-surface/85 relative flex min-h-88 items-center justify-center overflow-hidden rounded-3xl border p-6 text-center md:min-h-104">
+          {phase === 'countdown' ? (
+            <AnimatePresence mode="wait">
+              <motion.p
+                key={`countdown-${countdownValue}`}
+                initial={{ opacity: 0, scale: 0.4, y: 16 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 1.5, y: -18 }}
+                transition={{ duration: 0.45 }}
+                className="font-heading text-brand-secondary text-8xl font-bold"
+              >
+                {countdownValue}
+              </motion.p>
+            </AnimatePresence>
+          ) : (
+            <div className="space-y-3">
+              <p className="text-brand-muted text-xs tracking-[0.18em] uppercase">
+                {phase === 'rolling' ? 'Sorteando nomes...' : 'Ganhador'}
+              </p>
+
+              <AnimatePresence initial={false}>
+                <p className="font-heading text-brand-tertiary text-4xl leading-tight font-semibold md:text-6xl lg:text-7xl">
+                  <motion.span
+                    key={`${phase}-${rollingName}`}
+                    initial={{ opacity: 0, y: 18 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -12 }}
+                    transition={{ duration: phase === 'rolling' ? 0.1 : 0.2 }}
+                    className="inline-block"
+                  >
+                    {rollingName}
+                  </motion.span>
+                </p>
+              </AnimatePresence>
+            </div>
+          )}
+        </div>
+
+        <AnimatePresence>
+          {lastDraw ? (
+            <motion.div
+              initial={{ opacity: 0, y: 18 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }}
+              transition={{ duration: 0.3 }}
+              className="border-brand-primary/45 bg-brand-primary/15 rounded-2xl border p-4 text-center"
+            >
+              <p className="text-brand-primary text-xs tracking-[0.15em] uppercase">
+                Vencedor confirmado
+              </p>
+              <p className="text-brand-tertiary mt-2 text-xl font-semibold">
+                {lastDraw.winnerName}
+              </p>
+              <p className="text-brand-muted mt-1 text-sm">
+                Levou: {lastDraw.prizeLabel}
+              </p>
+            </motion.div>
+          ) : null}
+        </AnimatePresence>
+
+        <div className="flex flex-wrap gap-2">
+          <button
+            type="button"
+            onClick={() => {
+              void runDrawExperience()
+            }}
+            disabled={!canDraw}
+            className="bg-brand-primary text-brand-tertiary rounded-2xl px-5 py-3 text-sm font-semibold transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40"
           >
-            <p className="text-brand-primary text-xs tracking-[0.15em] uppercase">
-              Vencedor confirmado
-            </p>
-            <p className="text-brand-tertiary mt-2 text-xl font-semibold">
-              {lastDraw.winnerName}
-            </p>
-            <p className="text-brand-muted mt-1 text-sm">Levou: {lastDraw.prizeLabel}</p>
-          </motion.div>
+            {phase === 'countdown' || phase === 'rolling'
+              ? 'Sorteando...'
+              : 'Sortear agora'}
+          </button>
+          <button
+            type="button"
+            onClick={handleResetDraws}
+            disabled={phase === 'countdown' || phase === 'rolling'}
+            className="hover:border-brand-secondary hover:text-brand-secondary border-brand-line text-brand-tertiary rounded-2xl border px-5 py-3 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            Reiniciar sorteio
+          </button>
+        </div>
+
+        {drawCompleted ? (
+          <p className="border-brand-secondary/55 bg-brand-secondary/16 text-brand-tertiary rounded-2xl border px-4 py-3 text-sm">
+            Todos os premios foram definidos. O ultimo sorteio concluiu o Premio #1
+            principal.
+          </p>
         ) : null}
-      </AnimatePresence>
-
-      <div className="text-brand-muted grid gap-3 text-sm sm:grid-cols-3">
-        <div className="border-brand-line bg-brand-surface/65 rounded-2xl border p-3">
-          <p className="text-xs tracking-wider uppercase">Elegiveis</p>
-          <p className="text-brand-tertiary mt-1 text-lg font-semibold">
-            {eligibleParticipants.length}
-          </p>
-        </div>
-        <div className="border-brand-line bg-brand-surface/65 rounded-2xl border p-3">
-          <p className="text-xs tracking-wider uppercase">Premios</p>
-          <p className="text-brand-tertiary mt-1 text-lg font-semibold">
-            {validPrizes.length}
-          </p>
-        </div>
-        <div className="border-brand-line bg-brand-surface/65 rounded-2xl border p-3">
-          <p className="text-xs tracking-wider uppercase">Sorteados</p>
-          <p className="text-brand-tertiary mt-1 text-lg font-semibold">
-            {results.length}
-          </p>
-        </div>
       </div>
-
-      <div className="flex flex-wrap gap-2">
-        <button
-          type="button"
-          onClick={() => {
-            void runDrawExperience()
-          }}
-          disabled={!canDraw}
-          className="bg-brand-primary text-brand-tertiary rounded-2xl px-5 py-3 text-sm font-semibold transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40"
-        >
-          {phase === 'countdown' || phase === 'rolling'
-            ? 'Sorteando...'
-            : 'Sortear agora'}
-        </button>
-        <button
-          type="button"
-          onClick={handleResetDraws}
-          disabled={phase === 'countdown' || phase === 'rolling'}
-          className="hover:border-brand-secondary hover:text-brand-secondary border-brand-line text-brand-tertiary rounded-2xl border px-5 py-3 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-40"
-        >
-          Reiniciar sorteio
-        </button>
-      </div>
-
-      {drawCompleted ? (
-        <p className="border-brand-secondary/55 bg-brand-secondary/16 text-brand-tertiary rounded-2xl border px-4 py-3 text-sm">
-          Todos os premios foram definidos. O ultimo sorteio concluiu o Premio #1
-          principal.
-        </p>
-      ) : null}
     </div>
   )
 }

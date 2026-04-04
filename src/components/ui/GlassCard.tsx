@@ -19,11 +19,13 @@ export function GlassCard({ title, subtitle, className, children }: GlassCardPro
       {title || subtitle ? (
         <header className="mb-4 space-y-1">
           {title ? (
-            <h2 className="font-heading text-brand-tertiary text-xl font-semibold tracking-wide">
+            <h2 className="font-heading text-brand-tertiary text-xl tracking-wide">
               {title}
             </h2>
           ) : null}
-          {subtitle ? <p className="text-brand-muted text-sm">{subtitle}</p> : null}
+          {subtitle ? (
+            <p className="text-brand-muted text-xs font-normal">{subtitle}</p>
+          ) : null}
         </header>
       ) : null}
       {children}
