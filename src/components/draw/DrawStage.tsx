@@ -199,7 +199,7 @@ export function DrawStage({ autoStartSignal }: DrawStageProps) {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -12 }}
                     transition={{ duration: phase === 'rolling' ? 0.1 : 0.2 }}
-                    className="inline-block"
+                    className="inline-block tracking-wide"
                   >
                     {rollingName}
                   </motion.span>

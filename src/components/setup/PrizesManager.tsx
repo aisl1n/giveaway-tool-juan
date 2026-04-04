@@ -22,7 +22,6 @@ export function PrizesManager() {
               type="text"
               value={prize}
               onChange={(event) => updatePrize(index, event.target.value)}
-              onFocus={(event) => event.target.select()}
               placeholder={`Prêmio ${index + 1}`}
               className="focus:border-brand-secondary focus:ring-brand-secondary/30 border-brand-line bg-brand-surface/85 text-brand-tertiary w-full rounded-xl border px-3 py-2 text-sm font-normal transition outline-none focus:ring-2"
             />

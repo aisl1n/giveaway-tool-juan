@@ -6,7 +6,6 @@ import {
   EMPTY_LIST_LENGTH,
   MINIMUM_PRIZE_COUNT,
   NO_AVAILABLE_PRIZE_INDEX,
-  PRIZE_LABEL_PREFIX,
   RANDOM_ID_RADIX,
   RANDOM_ID_SLICE_START,
   STORAGE_KEY,
@@ -14,10 +13,7 @@ import {
 import { getEligibleParticipants, normalizePrizes } from '../lib/raffle'
 import type { DrawResult, RaffleStore } from '../types/raffle'
 
-const buildPrizeLabel = (position: number) => `${PRIZE_LABEL_PREFIX}${position}`
-
-const buildDefaultPrizes = () =>
-  Array.from({ length: DEFAULT_PRIZE_COUNT }, (_, index) => buildPrizeLabel(index + 1))
+const buildDefaultPrizes = () => Array.from({ length: DEFAULT_PRIZE_COUNT }, () => '')
 
 const createInitialState = () => ({
   participantsNames: '',
@@ -39,7 +35,7 @@ export const useRaffleStore = create<RaffleStore>()(
       },
       addPrize: () => {
         const { prizes } = get()
-        set({ prizes: [...prizes, buildPrizeLabel(prizes.length + 1)] })
+        set({ prizes: [...prizes, ''] })
       },
       updatePrize: (index, value) => {
         const { prizes } = get()
@@ -57,10 +53,7 @@ export const useRaffleStore = create<RaffleStore>()(
         const filteredPrizes = normalizePrizes(nextPrizes)
 
         set({
-          prizes:
-            filteredPrizes.length > EMPTY_LIST_LENGTH
-              ? nextPrizes
-              : [buildPrizeLabel(MINIMUM_PRIZE_COUNT)],
+          prizes: filteredPrizes.length > EMPTY_LIST_LENGTH ? nextPrizes : [''],
           results: [],
         })
       },
