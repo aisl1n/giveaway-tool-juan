@@ -8,10 +8,6 @@ import { useRaffleStore } from '../../store/useRaffleStore'
 import type { DrawPhase, DrawResult } from '../../types/raffle'
 import { DrawStatsPanel } from './DrawStatsPanel'
 
-type DrawStageProps = {
-  autoStartSignal?: number
-}
-
 const CONFIRMED_WINNER_PREVIEW_MS = 6200
 const READY_MESSAGE = 'Pronto para sortear'
 const COUNTDOWN_STEP_MS = 650
@@ -20,7 +16,7 @@ const ROLLING_STEP_MS = 60
 
 const formatStatValue = (value: number) => value.toString().padStart(2, '0')
 
-export function DrawStage({ autoStartSignal }: DrawStageProps) {
+export function DrawStage() {
   const participantsNames = useRaffleStore((state) => state.participantsNames)
   const prizes = useRaffleStore((state) => state.prizes)
   const results = useRaffleStore((state) => state.results)
@@ -31,7 +27,6 @@ export function DrawStage({ autoStartSignal }: DrawStageProps) {
   const [countdownValue, setCountdownValue] = useState<number>(3)
   const [rollingName, setRollingName] = useState<string>(READY_MESSAGE)
   const [lastDraw, setLastDraw] = useState<DrawResult | null>(null)
-  const lastAutoStartSignalRef = useRef<number | undefined>(undefined)
   const isDrawingRef = useRef(false)
 
   const validPrizes = useMemo(() => normalizePrizes(prizes), [prizes])
@@ -105,25 +100,6 @@ export function DrawStage({ autoStartSignal }: DrawStageProps) {
       isDrawingRef.current = false
     }
   }, [canDraw, drawNextWinner, eligibleParticipants])
-
-  useEffect(() => {
-    if (autoStartSignal === undefined) {
-      return
-    }
-
-    if (lastAutoStartSignalRef.current === autoStartSignal) {
-      return
-    }
-
-    lastAutoStartSignalRef.current = autoStartSignal
-    const timerId = window.setTimeout(() => {
-      void runDrawExperience()
-    }, 0)
-
-    return () => {
-      window.clearTimeout(timerId)
-    }
-  }, [autoStartSignal, runDrawExperience])
 
   useEffect(() => {
     if (!lastDraw) {

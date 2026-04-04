@@ -13,7 +13,6 @@ function App() {
   const prizes = useRaffleStore((state) => state.prizes)
   const results = useRaffleStore((state) => state.results)
   const [isDrawModalOpen, setIsDrawModalOpen] = useState(false)
-  const [autoStartSignal, setAutoStartSignal] = useState(0)
   const [motivationalMessage] = useState(() => {
     const messages = [
       'Treine forte, mantenha a constância e respeite o processo.',
@@ -35,7 +34,6 @@ function App() {
   const isDrawCompleted = validPrizes.length > 0 && results.length >= validPrizes.length
 
   const openDrawModal = () => {
-    setAutoStartSignal((value) => value + 1)
     setIsDrawModalOpen(true)
   }
 
@@ -110,7 +108,6 @@ function App() {
       <DrawModal
         isOpen={isDrawModalOpen}
         isDrawCompleted={isDrawCompleted}
-        autoStartSignal={autoStartSignal}
         onClose={() => setIsDrawModalOpen(false)}
       />
     </div>

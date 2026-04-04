@@ -5,16 +5,10 @@ import { DrawStage } from './DrawStage'
 type DrawModalProps = {
   isOpen: boolean
   isDrawCompleted: boolean
-  autoStartSignal: number
   onClose: () => void
 }
 
-export function DrawModal({
-  isOpen,
-  isDrawCompleted,
-  autoStartSignal,
-  onClose,
-}: DrawModalProps) {
+export function DrawModal({ isOpen, isDrawCompleted, onClose }: DrawModalProps) {
   useEffect(() => {
     if (!isOpen) {
       return
@@ -73,7 +67,7 @@ export function DrawModal({
             </button>
           </div>
 
-          <DrawStage autoStartSignal={autoStartSignal} />
+          <DrawStage />
         </div>
       </div>
     </div>
