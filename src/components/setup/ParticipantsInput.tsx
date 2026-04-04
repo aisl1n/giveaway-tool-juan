@@ -5,6 +5,14 @@ export function ParticipantsInput() {
   const participantsNames = useRaffleStore((state) => state.participantsNames)
   const setParticipantsNames = useRaffleStore((state) => state.setParticipantsNames)
 
+  const handleParticipantsChange = (value: string) => {
+    const capitalizedLines = value
+      .split('\n')
+      .map((line) => line.charAt(0).toUpperCase() + line.slice(1))
+      .join('\n')
+    setParticipantsNames(capitalizedLines)
+  }
+
   return (
     <GlassCard
       title="Participantes"
@@ -16,7 +24,7 @@ export function ParticipantsInput() {
       <textarea
         id="participants-textarea"
         value={participantsNames}
-        onChange={(event) => setParticipantsNames(event.target.value)}
+        onChange={(event) => handleParticipantsChange(event.target.value)}
         spellCheck={false}
         autoCorrect="off"
         autoCapitalize="off"
