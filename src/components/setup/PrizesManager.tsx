@@ -10,7 +10,11 @@ export function PrizesManager() {
   const removePrize = useRaffleStore((state) => state.removePrize)
 
   return (
-    <GlassCard title="Prêmios" subtitle="Cadastre os prêmios que serão sorteados.">
+    <GlassCard
+      title="Prêmios"
+      subtitle="Cadastre os prêmios que serão sorteados."
+      className="flex flex-col"
+    >
       <div className="space-y-3">
         {prizes.map((prize, index) => (
           <div key={`prize-${index}`} className="flex flex-col gap-2 sm:flex-row">
@@ -34,14 +38,16 @@ export function PrizesManager() {
         ))}
       </div>
 
-      <button
-        type="button"
-        onClick={addPrize}
-        className="bg-brand-secondary text-brand-tertiary mt-4 flex w-full items-center justify-center rounded-xl px-4 py-2 text-sm transition hover:brightness-110 sm:w-auto"
-      >
-        <PlusIcon className="mr-2" />
-        Adicionar prêmio
-      </button>
+      <div className="mt-auto flex justify-end">
+        <button
+          type="button"
+          onClick={addPrize}
+          className="bg-brand-secondary text-brand-tertiary mt-4 flex items-center justify-center rounded-xl px-4 py-2 text-sm transition hover:brightness-110"
+        >
+          <PlusIcon className="mr-2" />
+          Adicionar prêmio
+        </button>
+      </div>
     </GlassCard>
   )
 }
