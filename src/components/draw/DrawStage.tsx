@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import { Dumbbell, RotateCcw } from 'lucide-react'
+import { ArrowLeft, Dumbbell, RotateCcw } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { launchBrandConfetti } from '../../lib/confetti'
@@ -8,15 +8,27 @@ import { useRaffleStore } from '../../store/useRaffleStore'
 import type { DrawPhase, DrawResult } from '../../types/raffle'
 import { DrawStatsPanel } from './DrawStatsPanel'
 
-const CONFIRMED_WINNER_PREVIEW_MS = 6200
 const READY_MESSAGE = 'Pronto para sortear'
 const COUNTDOWN_STEP_MS = 650
 const ROLLING_SPIN_COUNT = 48
 const ROLLING_STEP_MS = 60
+const ROLLING_MESSAGES = [
+  'Aquecendo o sorteio',
+  'Contando as repetições',
+  'Carga máxima no nome',
+  'Foco no próximo vencedor',
+  'Hoje é dia de bater meta',
+  'Treino pesado, prêmio liberado',
+  'Ritmo forte até o resultado',
+]
 
 const formatStatValue = (value: number) => value.toString().padStart(2, '0')
 
-export function DrawStage() {
+type DrawStageProps = {
+  onClose?: () => void
+}
+
+export function DrawStage({ onClose }: DrawStageProps) {
   const participantsNames = useRaffleStore((state) => state.participantsNames)
   const prizes = useRaffleStore((state) => state.prizes)
   const results = useRaffleStore((state) => state.results)
@@ -26,8 +38,26 @@ export function DrawStage() {
   const [phase, setPhase] = useState<DrawPhase>('idle')
   const [countdownValue, setCountdownValue] = useState<number>(3)
   const [rollingName, setRollingName] = useState<string>(READY_MESSAGE)
+  const [rollingStatusMessage, setRollingStatusMessage] =
+    useState<string>('Aquecendo o sorteio')
+  const [rollingDotsCount, setRollingDotsCount] = useState<number>(0)
   const [lastDraw, setLastDraw] = useState<DrawResult | null>(null)
   const isDrawingRef = useRef(false)
+
+  useEffect(() => {
+    if (phase !== 'rolling' && phase !== 'countdown') {
+      setRollingDotsCount(0)
+      return
+    }
+
+    const intervalId = window.setInterval(() => {
+      setRollingDotsCount((previousCount) => (previousCount + 1) % 4)
+    }, 280)
+
+    return () => {
+      window.clearInterval(intervalId)
+    }
+  }, [phase])
 
   const validPrizes = useMemo(() => normalizePrizes(prizes), [prizes])
   const eligibleParticipants = useMemo(
@@ -67,6 +97,21 @@ export function DrawStage() {
         await sleep(COUNTDOWN_STEP_MS)
       }
 
+      setRollingStatusMessage((previousMessage) => {
+        if (ROLLING_MESSAGES.length < 2) {
+          return ROLLING_MESSAGES[0] ?? previousMessage
+        }
+
+        let nextMessage =
+          ROLLING_MESSAGES[Math.floor(Math.random() * ROLLING_MESSAGES.length)]
+
+        while (nextMessage === previousMessage) {
+          nextMessage =
+            ROLLING_MESSAGES[Math.floor(Math.random() * ROLLING_MESSAGES.length)]
+        }
+
+        return nextMessage
+      })
       setPhase('rolling')
 
       let previousIndex = -1
@@ -101,33 +146,36 @@ export function DrawStage() {
     }
   }, [canDraw, drawNextWinner, eligibleParticipants])
 
-  useEffect(() => {
-    if (!lastDraw) {
-      return
-    }
-
-    const timerId = window.setTimeout(() => {
-      setLastDraw(null)
-    }, CONFIRMED_WINNER_PREVIEW_MS)
-
-    return () => {
-      window.clearTimeout(timerId)
-    }
-  }, [lastDraw])
-
   const handleResetDraws = () => {
     resetDraws()
     setPhase('idle')
     setCountdownValue(3)
     setRollingName(READY_MESSAGE)
+    setRollingStatusMessage('Aquecendo o sorteio')
     setLastDraw(null)
   }
 
   return (
     <div className="mx-auto flex w-full max-w-5xl flex-col gap-4">
       <div className="space-y-4">
-        <div className="border-brand-line bg-brand-surface/55 flex w-full flex-col items-center gap-4 rounded-3xl border px-4 py-4 text-center md:flex-row md:justify-between">
-          <div className="flex w-full flex-col md:w-1/3">
+        <div className="border-brand-line md:bg-brand-surface/55 relative grid w-full grid-cols-1 gap-4 rounded-3xl border-0 bg-transparent px-4 py-4 text-center md:border lg:grid-cols-[max-content_minmax(0,1fr)_max-content] lg:items-center lg:text-left">
+          <div className="mx-auto flex w-fit items-center justify-center gap-3 lg:mx-0 lg:justify-start">
+            <img
+              src="/images/Logotipo-Principal.png"
+              alt="Logotipo da marca"
+              className="h-10 w-auto shrink-0 lg:h-12"
+            />
+            <div className="flex flex-col justify-center leading-tight">
+              <p className="text-brand-secondary text-xs tracking-[0.2em] uppercase">
+                Tela de sorteio
+              </p>
+              <h2 className="font-heading text-brand-tertiary text-lg font-semibold lg:text-xl">
+                Sorteador oficial
+              </h2>
+            </div>
+          </div>
+
+          <div className="min-w-0 flex-1 text-center">
             <p className="text-brand-muted text-[10px] tracking-[0.18em] uppercase">
               Próximo prêmio
             </p>
@@ -136,7 +184,9 @@ export function DrawStage() {
             </p>
           </div>
 
-          <DrawStatsPanel items={drawStats} />
+          <div className="mx-auto flex w-fit justify-center lg:mx-0 lg:justify-end">
+            <DrawStatsPanel items={drawStats} />
+          </div>
         </div>
 
         <div className="border-brand-line bg-brand-surface/85 relative flex min-h-88 items-center justify-center overflow-hidden rounded-3xl border p-6 text-center md:min-h-104">
@@ -157,7 +207,10 @@ export function DrawStage() {
             <div className="space-y-3">
               {phase === 'rolling' ? (
                 <p className="text-brand-muted text-xs tracking-[0.18em] uppercase">
-                  Sorteando nomes...
+                  {rollingStatusMessage}
+                  <span className="inline-block w-[2ch] text-left">
+                    {'.'.repeat(rollingDotsCount)}
+                  </span>
                 </p>
               ) : null}
 
@@ -181,38 +234,34 @@ export function DrawStage() {
                   </motion.span>
                 </p>
               </AnimatePresence>
+
+              {phase === 'result' && lastDraw ? (
+                <p className="text-brand-secondary text-sm tracking-[0.08em] uppercase md:text-base">
+                  {lastDraw.prizeLabel}
+                </p>
+              ) : null}
             </div>
           )}
         </div>
 
-        <AnimatePresence>
-          {lastDraw ? (
-            <motion.div
-              initial={{ opacity: 0, y: 18 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -12 }}
-              transition={{ duration: 0.3 }}
-              className="border-brand-primary/45 bg-brand-primary/15 rounded-2xl border p-4 text-center"
+        <div className="grid grid-cols-2 gap-2 md:flex md:flex-wrap md:justify-end">
+          {onClose ? (
+            <button
+              type="button"
+              onClick={onClose}
+              disabled={phase === 'countdown' || phase === 'rolling'}
+              className="hover:border-brand-secondary hover:text-brand-secondary border-brand-line text-brand-tertiary flex w-full items-center justify-center gap-2 rounded-2xl border px-5 py-3 text-sm font-normal whitespace-nowrap transition disabled:cursor-not-allowed disabled:opacity-40 md:w-44"
             >
-              <p className="text-brand-primary text-xs tracking-[0.15em] uppercase">
-                Vencedor confirmado
-              </p>
-              <p className="text-brand-tertiary mt-2 text-xl font-semibold">
-                {lastDraw.winnerName}
-              </p>
-              <p className="text-brand-muted mt-1 text-sm">
-                Levou: {lastDraw.prizeLabel}
-              </p>
-            </motion.div>
+              <ArrowLeft className="h-4 w-4" />
+              Voltar para o início
+            </button>
           ) : null}
-        </AnimatePresence>
 
-        <div className="flex flex-wrap justify-end gap-2">
           <button
             type="button"
             onClick={handleResetDraws}
             disabled={phase === 'countdown' || phase === 'rolling'}
-            className="hover:border-brand-secondary hover:text-brand-secondary border-brand-line text-brand-tertiary flex items-center gap-2 rounded-2xl border px-5 py-3 text-sm font-normal transition disabled:cursor-not-allowed disabled:opacity-40"
+            className="hover:border-brand-secondary hover:text-brand-secondary border-brand-line text-brand-tertiary flex w-full items-center justify-center gap-2 rounded-2xl border px-5 py-3 text-sm font-normal whitespace-nowrap transition disabled:cursor-not-allowed disabled:opacity-40 md:w-44"
           >
             <RotateCcw className="h-4 w-4" />
             Reiniciar sorteio
@@ -223,14 +272,14 @@ export function DrawStage() {
               void runDrawExperience()
             }}
             disabled={!canDraw}
-            className="bg-brand-primary text-brand-tertiary flex items-center gap-2 rounded-2xl px-5 py-3 text-sm font-normal transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40"
+            className="bg-brand-primary text-brand-tertiary col-span-2 flex w-full items-center justify-center gap-2 rounded-2xl px-5 py-3 text-sm font-normal whitespace-nowrap transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40 md:w-44"
           >
             {phase === 'countdown' || phase === 'rolling' ? (
               <>
                 <span className="inline-block animate-spin">
                   <Dumbbell className="h-4 w-4" />
                 </span>
-                Sorteando...
+                Sorteando
               </>
             ) : (
               <>
@@ -243,7 +292,7 @@ export function DrawStage() {
 
         {drawCompleted ? (
           <p className="border-brand-secondary/55 bg-brand-secondary/16 text-brand-tertiary rounded-2xl border px-4 py-3 text-sm">
-            Todos os premios foram definidos. O ultimo sorteio concluiu o Premio #1
+            Todos os prêmios foram definidos. O último sorteio concluiu o prêmio #1
             principal.
           </p>
         ) : null}
