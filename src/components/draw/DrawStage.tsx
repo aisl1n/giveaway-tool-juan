@@ -252,7 +252,7 @@ export function DrawStage({ onClose }: DrawStageProps) {
               disabled={phase === 'countdown' || phase === 'rolling'}
               className="hover:border-brand-secondary hover:text-brand-secondary border-brand-line text-brand-tertiary flex w-full items-center justify-center gap-2 rounded-2xl border px-5 py-3 text-sm font-normal whitespace-nowrap transition disabled:cursor-not-allowed disabled:opacity-40 md:w-44"
             >
-              <ArrowLeft className="h-4 w-4" />
+              <ArrowLeft className="h-4 w-4 shrink-0" />
               Voltar para o início
             </button>
           ) : null}
