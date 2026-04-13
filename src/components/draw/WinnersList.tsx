@@ -52,6 +52,16 @@ export function WinnersList() {
   }, [results, validPrizes.length])
 
   const podiumResults = rankedResults.slice(0, 3)
+  const visiblePodiumStyles = PODIUM_STYLES.filter((style) =>
+    podiumResults.some((result) => result.ranking === style.place),
+  )
+  const hasFullPodium = visiblePodiumStyles.length === 3
+  const podiumGridColumnsClass =
+    visiblePodiumStyles.length === 1
+      ? 'md:grid-cols-1 md:max-w-sm'
+      : visiblePodiumStyles.length === 2
+        ? 'md:grid-cols-2 md:max-w-2xl'
+        : 'md:grid-cols-3'
 
   return (
     <GlassCard
@@ -64,18 +74,25 @@ export function WinnersList() {
         </p>
       ) : (
         <div className="space-y-5">
-          <section className="mx-auto grid max-w-4xl gap-3 md:grid-cols-3 md:items-end">
-            {PODIUM_STYLES.map((style) => {
+          <section
+            className={`mx-auto grid w-full max-w-4xl gap-3 md:items-end ${podiumGridColumnsClass}`}
+          >
+            {visiblePodiumStyles.map((style) => {
               const podiumItem = podiumResults.find(
                 (result) => result.ranking === style.place,
               )
               const Icon = style.icon
               const isFirstPlace = style.place === 1
-              const orderClass =
-                style.place === 1
+              const orderClass = hasFullPodium
+                ? style.place === 1
                   ? 'order-1 md:order-2'
                   : style.place === 2
                     ? 'order-2 md:order-1'
+                    : 'order-3 md:order-3'
+                : style.place === 1
+                  ? 'order-1 md:order-1'
+                  : style.place === 2
+                    ? 'order-2 md:order-2'
                     : 'order-3 md:order-3'
 
               return (
@@ -94,22 +111,18 @@ export function WinnersList() {
                       <Icon className="h-4 w-4" />
                     </div>
 
-                    {podiumItem ? (
-                      <div className="mx-auto flex max-w-[18ch] flex-col items-center text-center">
-                        <p
-                          className={`text-brand-tertiary leading-tight font-semibold ${isFirstPlace ? 'text-xl tracking-wider md:text-2xl' : 'text-lg tracking-wider md:text-xl'}`}
-                        >
-                          {podiumItem.winnerName}
-                        </p>
-                        <p
-                          className={`text-brand-secondary mt-1 text-center ${isFirstPlace ? 'text-base tracking-wider md:text-lg' : 'text-sm tracking-wider md:text-base'}`}
-                        >
-                          {podiumItem.prizeLabel}
-                        </p>
-                      </div>
-                    ) : (
-                      <p className="text-brand-muted text-xs">Aguardando sorteio</p>
-                    )}
+                    <div className="mx-auto flex max-w-[18ch] flex-col items-center text-center">
+                      <p
+                        className={`text-brand-tertiary leading-tight font-semibold ${isFirstPlace ? 'text-xl tracking-wider md:text-2xl' : 'text-lg tracking-wider md:text-xl'}`}
+                      >
+                        {podiumItem?.winnerName}
+                      </p>
+                      <p
+                        className={`text-brand-secondary mt-1 text-center ${isFirstPlace ? 'text-base tracking-wider md:text-lg' : 'text-sm tracking-wider md:text-base'}`}
+                      >
+                        {podiumItem?.prizeLabel}
+                      </p>
+                    </div>
                   </div>
                   <div
                     className={`border-brand-line text-brand-tertiary mt-1 hidden w-full max-w-40 items-center justify-center rounded-md border-t font-semibold md:flex ${style.standClass}`}
