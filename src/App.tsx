@@ -1,18 +1,21 @@
 import { Dumbbell, Trash2 } from 'lucide-react'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import { DrawModal } from './components/draw/DrawModal'
 import { WinnersList } from './components/draw/WinnersList'
 import { ParticipantsInput } from './components/setup/ParticipantsInput'
 import { PrizesManager } from './components/setup/PrizesManager'
-import { normalizePrizes } from './lib/raffle'
+import { normalizePrizes, parseParticipants } from './lib/raffle'
 import { useRaffleStore } from './store/useRaffleStore'
 
 function App() {
   const clearAll = useRaffleStore((state) => state.clearAll)
+  const participantsNames = useRaffleStore((state) => state.participantsNames)
   const prizes = useRaffleStore((state) => state.prizes)
   const results = useRaffleStore((state) => state.results)
   const [isDrawModalOpen, setIsDrawModalOpen] = useState(false)
+  const [showFinalResults, setShowFinalResults] = useState(false)
+  const [startValidationMessage, setStartValidationMessage] = useState('')
   const [motivationalMessage] = useState(() => {
     const messages = [
       'Treine forte, mantenha a constância e respeite o processo.',
@@ -27,13 +30,49 @@ function App() {
 
   const handleClearAll = () => {
     setIsDrawModalOpen(false)
+    setShowFinalResults(false)
     clearAll()
   }
 
   const validPrizes = useMemo(() => normalizePrizes(prizes), [prizes])
+  const validParticipants = useMemo(
+    () => parseParticipants(participantsNames),
+    [participantsNames],
+  )
   const isDrawCompleted = validPrizes.length > 0 && results.length >= validPrizes.length
+  const canStartDraw = validParticipants.length > 0 && validPrizes.length > 0
+
+  useEffect(() => {
+    if (!startValidationMessage) {
+      return
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      setStartValidationMessage('')
+    }, 3000)
+
+    return () => {
+      window.clearTimeout(timeoutId)
+    }
+  }, [startValidationMessage])
 
   const openDrawModal = () => {
+    if (!canStartDraw) {
+      if (validParticipants.length === 0 && validPrizes.length === 0) {
+        setStartValidationMessage(
+          'Cadastre pelo menos 1 participante e 1 prêmio para iniciar o sorteio.',
+        )
+      } else if (validParticipants.length === 0) {
+        setStartValidationMessage(
+          'Cadastre pelo menos 1 participante para iniciar o sorteio.',
+        )
+      } else {
+        setStartValidationMessage('Cadastre pelo menos 1 prêmio para iniciar o sorteio.')
+      }
+      return
+    }
+
+    setStartValidationMessage('')
     setIsDrawModalOpen(true)
   }
 
@@ -65,7 +104,7 @@ function App() {
         </header>
 
         <main className="space-y-4">
-          {isDrawCompleted ? (
+          {showFinalResults ? (
             <section className="mx-auto w-full max-w-4xl">
               <WinnersList />
             </section>
@@ -85,7 +124,7 @@ function App() {
               <Trash2 className="h-4 w-4" />
               Limpar todos os dados
             </button>
-            {!isDrawCompleted ? (
+            {!showFinalResults ? (
               <button
                 type="button"
                 onClick={openDrawModal}
@@ -96,6 +135,12 @@ function App() {
               </button>
             ) : null}
           </section>
+
+          {startValidationMessage ? (
+            <p className="text-brand-secondary text-center text-xs sm:text-sm">
+              {startValidationMessage}
+            </p>
+          ) : null}
         </main>
 
         <footer className="text-brand-muted pb-2 text-center text-[10px] tracking-wide">
@@ -107,8 +152,11 @@ function App() {
 
       <DrawModal
         isOpen={isDrawModalOpen}
-        isDrawCompleted={isDrawCompleted}
         onClose={() => setIsDrawModalOpen(false)}
+        onShowFinalResults={() => {
+          setShowFinalResults(true)
+          setIsDrawModalOpen(false)
+        }}
       />
     </div>
   )

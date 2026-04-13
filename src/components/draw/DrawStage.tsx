@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import { ArrowLeft, Dumbbell, RotateCcw } from 'lucide-react'
+import { ArrowLeft, Dumbbell, ListChecks, RotateCcw } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { launchBrandConfetti } from '../../lib/confetti'
@@ -26,9 +26,10 @@ const formatStatValue = (value: number) => value.toString().padStart(2, '0')
 
 type DrawStageProps = {
   onClose?: () => void
+  onShowFinalResults?: () => void
 }
 
-export function DrawStage({ onClose }: DrawStageProps) {
+export function DrawStage({ onClose, onShowFinalResults }: DrawStageProps) {
   const participantsNames = useRaffleStore((state) => state.participantsNames)
   const prizes = useRaffleStore((state) => state.prizes)
   const results = useRaffleStore((state) => state.results)
@@ -177,9 +178,11 @@ export function DrawStage({ onClose }: DrawStageProps) {
 
           <div className="flex min-w-0 flex-col items-center text-center lg:text-center">
             <div>
-              <p className="text-brand-muted text-[10px] tracking-[0.18em] uppercase">
-                Próximo prêmio
-              </p>
+              {!drawCompleted ? (
+                <p className="text-brand-muted text-[10px] tracking-[0.18em] uppercase">
+                  Próximo prêmio
+                </p>
+              ) : null}
               <p className="text-brand-secondary mt-1 text-[1.7rem] font-semibold md:text-3xl">
                 {nextPrizeLabel ?? 'Sorteio encerrado'}
               </p>
@@ -244,6 +247,15 @@ export function DrawStage({ onClose }: DrawStageProps) {
               ) : null}
             </div>
           )}
+
+          {drawCompleted ? (
+            <div className="pointer-events-none absolute inset-x-0 bottom-4 flex justify-center px-4">
+              <p className="border-brand-secondary/55 bg-brand-secondary/16 text-brand-tertiary inline-flex max-w-full rounded-2xl border px-4 py-3 text-center text-sm">
+                Todos os prêmios foram definidos. O último sorteio concluiu o prêmio
+                principal.
+              </p>
+            </div>
+          ) : null}
         </div>
 
         <div className="grid grid-cols-2 gap-2 md:flex md:flex-wrap md:justify-end">
@@ -268,36 +280,40 @@ export function DrawStage({ onClose }: DrawStageProps) {
             <RotateCcw className="h-4 w-4" />
             Reiniciar sorteio
           </button>
-          <button
-            type="button"
-            onClick={() => {
-              void runDrawExperience()
-            }}
-            disabled={!canDraw}
-            className="bg-brand-primary text-brand-tertiary col-span-2 flex w-full items-center justify-center gap-2 rounded-2xl px-5 py-3 text-sm font-normal whitespace-nowrap transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40 md:w-44"
-          >
-            {phase === 'countdown' || phase === 'rolling' ? (
-              <>
-                <span className="inline-block animate-spin">
+          {drawCompleted ? (
+            <button
+              type="button"
+              onClick={onShowFinalResults}
+              className="bg-brand-primary text-brand-tertiary col-span-2 flex w-full items-center justify-center gap-2 rounded-2xl px-5 py-3 text-sm font-normal whitespace-nowrap transition hover:brightness-110 md:w-44"
+            >
+              <ListChecks className="h-4 w-4" />
+              Ver resultados finais
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={() => {
+                void runDrawExperience()
+              }}
+              disabled={!canDraw}
+              className="bg-brand-primary text-brand-tertiary col-span-2 flex w-full items-center justify-center gap-2 rounded-2xl px-5 py-3 text-sm font-normal whitespace-nowrap transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40 md:w-44"
+            >
+              {phase === 'countdown' || phase === 'rolling' ? (
+                <>
+                  <span className="inline-block animate-spin">
+                    <Dumbbell className="h-4 w-4" />
+                  </span>
+                  Sorteando
+                </>
+              ) : (
+                <>
                   <Dumbbell className="h-4 w-4" />
-                </span>
-                Sorteando
-              </>
-            ) : (
-              <>
-                <Dumbbell className="h-4 w-4" />
-                Sortear agora
-              </>
-            )}
-          </button>
+                  Sortear agora
+                </>
+              )}
+            </button>
+          )}
         </div>
-
-        {drawCompleted ? (
-          <p className="border-brand-secondary/55 bg-brand-secondary/16 text-brand-tertiary rounded-2xl border px-4 py-3 text-sm">
-            Todos os prêmios foram definidos. O último sorteio concluiu o prêmio #1
-            principal.
-          </p>
-        ) : null}
       </div>
     </div>
   )

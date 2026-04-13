@@ -8,7 +8,11 @@ export function ParticipantsInput() {
   const handleParticipantsChange = (value: string) => {
     const capitalizedLines = value
       .split('\n')
-      .map((line) => line.charAt(0).toUpperCase() + line.slice(1))
+      .map((line) =>
+        line.replace(/(^|\s)(\S)/g, (match, prefix: string, char: string) => {
+          return `${prefix}${char.toUpperCase()}`
+        }),
+      )
       .join('\n')
     setParticipantsNames(capitalizedLines)
   }

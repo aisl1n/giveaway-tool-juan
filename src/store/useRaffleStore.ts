@@ -50,10 +50,9 @@ export const useRaffleStore = create<RaffleStore>()(
         }
 
         const nextPrizes = prizes.filter((_, itemIndex) => itemIndex !== index)
-        const filteredPrizes = normalizePrizes(nextPrizes)
 
         set({
-          prizes: filteredPrizes.length > EMPTY_LIST_LENGTH ? nextPrizes : [''],
+          prizes: nextPrizes.length > EMPTY_LIST_LENGTH ? nextPrizes : [''],
           results: [],
         })
       },

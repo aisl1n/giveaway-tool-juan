@@ -9,6 +9,11 @@ export function PrizesManager() {
   const updatePrize = useRaffleStore((state) => state.updatePrize)
   const removePrize = useRaffleStore((state) => state.removePrize)
 
+  const handlePrizeChange = (index: number, value: string) => {
+    const capitalizedPrize = value.charAt(0).toUpperCase() + value.slice(1)
+    updatePrize(index, capitalizedPrize)
+  }
+
   return (
     <GlassCard
       title="Prêmios"
@@ -21,7 +26,8 @@ export function PrizesManager() {
             <input
               type="text"
               value={prize}
-              onChange={(event) => updatePrize(index, event.target.value)}
+              onChange={(event) => handlePrizeChange(index, event.target.value)}
+              autoCapitalize="sentences"
               placeholder={`Prêmio ${index + 1}`}
               className="focus:border-brand-secondary focus:ring-brand-secondary/30 border-brand-line bg-brand-surface/85 text-brand-tertiary w-full rounded-xl border px-3 py-2 text-sm font-normal transition outline-none focus:ring-2"
             />
