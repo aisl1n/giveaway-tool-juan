@@ -145,7 +145,6 @@ export function WinnersList() {
               </li>
             ))}
           </ol>
-
         </div>
       )}
     </GlassCard>
