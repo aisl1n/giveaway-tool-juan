@@ -12,7 +12,6 @@ function App() {
   const clearAll = useRaffleStore((state) => state.clearAll)
   const participantsNames = useRaffleStore((state) => state.participantsNames)
   const prizes = useRaffleStore((state) => state.prizes)
-  const results = useRaffleStore((state) => state.results)
   const [isDrawModalOpen, setIsDrawModalOpen] = useState(false)
   const [showFinalResults, setShowFinalResults] = useState(false)
   const [startValidationMessage, setStartValidationMessage] = useState('')
@@ -39,7 +38,7 @@ function App() {
     () => parseParticipants(participantsNames),
     [participantsNames],
   )
-  const isDrawCompleted = validPrizes.length > 0 && results.length >= validPrizes.length
+
   const canStartDraw = validParticipants.length > 0 && validPrizes.length > 0
 
   useEffect(() => {

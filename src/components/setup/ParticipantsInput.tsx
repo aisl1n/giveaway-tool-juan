@@ -9,7 +9,7 @@ export function ParticipantsInput() {
     const capitalizedLines = value
       .split('\n')
       .map((line) =>
-        line.replace(/(^|\s)(\S)/g, (match, prefix: string, char: string) => {
+        line.replace(/(^|\s)(\S)/g, (prefix: string, char: string) => {
           return `${prefix}${char.toUpperCase()}`
         }),
       )
