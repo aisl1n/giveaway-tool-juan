@@ -158,33 +158,35 @@ export function DrawStage({ onClose }: DrawStageProps) {
   return (
     <div className="mx-auto flex w-full max-w-5xl flex-col gap-4">
       <div className="space-y-4">
-        <div className="border-brand-line md:bg-brand-surface/55 relative grid w-full grid-cols-1 gap-4 rounded-3xl border-0 bg-transparent px-4 py-4 text-center md:border lg:grid-cols-[max-content_minmax(0,1fr)_max-content] lg:items-center lg:text-left">
-          <div className="mx-auto flex w-fit items-center justify-center gap-3 lg:mx-0 lg:justify-start">
+        <div className="border-brand-line md:bg-brand-surface/55 relative grid w-full grid-cols-1 gap-4 rounded-3xl border-0 bg-transparent px-4 py-4 text-center md:grid-cols-2 md:place-items-center md:border lg:grid-cols-[max-content_minmax(0,1fr)_max-content] lg:place-items-stretch lg:items-center lg:text-left">
+          <div className="mx-auto flex w-fit flex-col items-center justify-center gap-2 text-center md:row-span-2 md:self-center lg:row-span-1 lg:mx-0 lg:flex-row lg:items-center lg:justify-start lg:gap-3 lg:text-left">
             <img
               src="/images/Logotipo-Principal.png"
               alt="Logotipo da marca"
-              className="h-10 w-auto shrink-0 lg:h-12"
+              className="h-14 w-auto shrink-0 md:h-16"
             />
             <div className="flex flex-col justify-center leading-tight">
               <p className="text-brand-secondary text-xs tracking-[0.2em] uppercase">
                 Tela de sorteio
               </p>
-              <h2 className="font-heading text-brand-tertiary text-lg font-semibold lg:text-xl">
+              <h2 className="font-heading text-brand-tertiary text-xl font-semibold lg:text-2xl">
                 Sorteador oficial
               </h2>
             </div>
           </div>
 
-          <div className="min-w-0 flex-1 text-center">
-            <p className="text-brand-muted text-[10px] tracking-[0.18em] uppercase">
-              Próximo prêmio
-            </p>
-            <p className="text-brand-secondary mt-1 text-2xl font-semibold">
-              {nextPrizeLabel ?? 'Sorteio encerrado'}
-            </p>
+          <div className="flex min-w-0 flex-col items-center text-center lg:text-center">
+            <div>
+              <p className="text-brand-muted text-[10px] tracking-[0.18em] uppercase">
+                Próximo prêmio
+              </p>
+              <p className="text-brand-secondary mt-1 text-[1.7rem] font-semibold md:text-3xl">
+                {nextPrizeLabel ?? 'Sorteio encerrado'}
+              </p>
+            </div>
           </div>
 
-          <div className="mx-auto flex w-fit justify-center lg:mx-0 lg:justify-end">
+          <div className="mx-auto flex w-fit justify-center md:col-start-2 md:row-start-2 md:justify-center lg:col-start-auto lg:row-start-auto lg:mx-0 lg:justify-end">
             <DrawStatsPanel items={drawStats} />
           </div>
         </div>
