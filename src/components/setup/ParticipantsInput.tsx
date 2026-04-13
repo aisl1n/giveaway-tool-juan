@@ -9,7 +9,7 @@ export function ParticipantsInput() {
     const capitalizedLines = value
       .split('\n')
       .map((line) =>
-        line.replace(/(^|\s)(\S)/g, (prefix: string, char: string) => {
+        line.replace(/(^|\s)(\S)/g, (_match, prefix: string, char: string) => {
           return `${prefix}${char.toUpperCase()}`
         }),
       )
@@ -31,7 +31,7 @@ export function ParticipantsInput() {
         onChange={(event) => handleParticipantsChange(event.target.value)}
         spellCheck={false}
         autoCorrect="off"
-        autoCapitalize="off"
+        autoCapitalize="words"
         placeholder={'Ana\nBruna\nYasmin'}
         className="focus:border-brand-secondary focus:ring-brand-secondary/30 border-brand-line bg-brand-surface/85 text-brand-tertiary min-h-52 w-full resize-y rounded-2xl border px-4 py-3 text-sm transition outline-none focus:ring-2"
       />
